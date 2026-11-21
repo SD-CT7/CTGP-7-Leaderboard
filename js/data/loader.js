@@ -72,7 +72,7 @@ export async function startLoadingProcess() {
   let playerLeaderboardData = window.playerLeaderboardData;
 
   // Default / Flap / Mission はCSVから取得
-  const csvPromises = Object.keys(CSV_URLs).map(async (key) => {
+  const csvPromises = Object.keys(CSV_URLS).map(async (key) => {
     const url = CSV_URLS[key];
     try {
       const res = await fetch(url + "&t=" + Date.now());
