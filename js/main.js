@@ -179,6 +179,7 @@ function renderPlayerLeaderboard() {
     const row = document.createElement('div');
     row.className = `player-row ${p.rank === 1 ? 'rank-1st' : ''} animate-slide-in`;
     row.style.animationDelay = `${Math.min(i + 1, 20) * 0.03}s`;
+    row.dataset.player = p.name;
 
     let rankContent;
     if (p.rank <= 8) {
@@ -187,18 +188,13 @@ function renderPlayerLeaderboard() {
       rankContent = `${p.rank}`;
     }
 
-    const safeName = p.name.replace(/'/g, "\\'");
-    let nameHtml = `<a href="/player/${encodeURIComponent(p.name)}" class="name-link" onclick="event.preventDefault();event.stopPropagation();openPlayerProfile('${safeName}', this)">${p.name}</a>`;
+    let nameHtml = `<a href="/player/${encodeURIComponent(p.name)}" class="name-link" data-player="${escapeAttr(p.name)}">${p.name}</a>`;
 
     row.innerHTML = `
       <div class="pr-rank">${rankContent}</div>
       <div class="pr-name">${nameHtml}</div>
       <div class="pr-points">${p.points} pt</div>
     `;
-    row.addEventListener('click', (e) => {
-      if (e.target.closest('.name-link')) return;
-      openPlayerProfile(p.name, row);
-    });
     playerRankingListEl.appendChild(row);
   });
 }
@@ -311,11 +307,10 @@ function renderPlayerProfileRecords() {
     if (hasRecord && r.video && r.video !== '-') {
       const iconSrc = getVideoIcon(r.video);
       const isModalTarget = (iconSrc === 'Youtube.webp' || iconSrc === 'Discord.webp' || iconSrc === 'Filenow.webp');
-      const safeUrl = String(r.video).replace(/'/g, "\\'");
-      const safeHref = String(r.video).replace(/"/g, '&quot;');
+      const safeHref = escapeAttr(String(r.video));
       timeHtml = `<a href="${safeHref}" target="_blank" rel="noopener" class="time-link">${r.time}</a>`;
       if (isModalTarget) {
-        iconHtml = `<div onclick="openVideoModal('${safeUrl}')" style="cursor:pointer"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></div>`;
+        iconHtml = `<div class="video-icon" data-video-url="${escapeAttr(String(r.video))}" style="cursor:pointer"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></div>`;
       } else {
         iconHtml = `<a href="${safeHref}" target="_blank" rel="noopener"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></a>`;
       }
@@ -755,12 +750,7 @@ function closeVideoModal() {
   }, 300); 
 }
 
-// ===== window 公開（Step 4b 完了まで暫定） =====
-// 動的HTML（renderRankingList / renderPlayerLeaderboard / renderPlayerProfileRecords）から呼ばれる
-window.openPlayerProfile = openPlayerProfile;
-window.openVideoModal = openVideoModal;
-
-// loader.js から参照される状態・関数
+// ===== window 公開（loader.js が参照する状態・関数のみ） =====
 window.allCategoryData = allCategoryData;
 window.playerLeaderboardData = playerLeaderboardData;
 window.globalPlayerChannelMap = globalPlayerChannelMap;
@@ -771,21 +761,6 @@ window.checkInitialPlayerRoute = checkInitialPlayerRoute;
 // ===== Step 4a: 静的 onclick の addEventListener 化 =====
 
 function initStaticEventListeners() {
-  // ランキング項目（プレイヤー / モーダル動画）→ イベント委譲
-  rankingListEl.addEventListener('click', (e) => {
-    const playerLink = e.target.closest('.name-link[data-player]');
-    if (playerLink) {
-      e.preventDefault();
-      openPlayerProfile(playerLink.dataset.player, playerLink);
-      return;
-    }
-
-    const videoIcon = e.target.closest('.video-icon[data-video-url]');
-    if (videoIcon) {
-      openVideoModal(videoIcon.dataset.videoUrl);
-    }
-  });
-
   // ① 全体×ボタン
   document.querySelector('.close-btn').addEventListener('click', handleGlobalClose);
 
@@ -861,7 +836,55 @@ function initStaticEventListeners() {
   });
 }
 
+// ===== Step 4b: 動的HTMLのイベント委譲 =====
+function initDynamicEventDelegation() {
+  // ランキング一覧
+  rankingListEl.addEventListener('click', (e) => {
+    const nameLink = e.target.closest('.name-link[data-player]');
+    if (nameLink) {
+      e.preventDefault();
+      openPlayerProfile(nameLink.dataset.player, nameLink);
+      return;
+    }
+
+    const videoIcon = e.target.closest('.video-icon[data-video-url]');
+    if (videoIcon) {
+      openVideoModal(videoIcon.dataset.videoUrl);
+      return;
+    }
+    // タイムリンクは通常の <a target="_blank"> なので何もしない
+  });
+
+  // プレイヤーリーダーボード
+  playerRankingListEl.addEventListener('click', (e) => {
+    const nameLink = e.target.closest('.name-link[data-player]');
+    if (nameLink) {
+      e.preventDefault();
+      openPlayerProfile(nameLink.dataset.player, nameLink);
+      return;
+    }
+
+    const row = e.target.closest('.player-row[data-player]');
+    if (row) {
+      openPlayerProfile(row.dataset.player, row);
+      return;
+    }
+  });
+
+  // プロフィールの記録一覧
+  ppRecordListEl.addEventListener('click', (e) => {
+    const videoIcon = e.target.closest('.video-icon[data-video-url]');
+    if (videoIcon) {
+      openVideoModal(videoIcon.dataset.videoUrl);
+      return;
+    }
+    // タイムリンクは通常の <a target="_blank"> なので何もしない
+    // コースジャンプは個別 addEventListener（既存維持）
+  });
+}
+
 // ===== 初期化 =====
 initStaticEventListeners();
+initDynamicEventDelegation();
 preloadStaticIcons();
 startLoadingProcess();
