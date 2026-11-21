@@ -1,0 +1,36 @@
+:root {
+  --bg-color: #333338;
+  --card-bg: #000;
+  --border-color: #444;
+  --highlight: #f1c40f;
+  --transition-speed: 0.6s;
+  --hover-speed: 0.15s; 
+  
+  --easing-smooth: cubic-bezier(0.25, 1, 0.5, 1);
+  --sidebar-width: 120px; 
+  
+  --gold-smooth: linear-gradient(to bottom, #fffbe0 0%, #fef06a 20%, #f7d54d 45%, #e2a400 55%, #f1b800 80%, #d48a00 100%);
+  --gray-smooth: linear-gradient(to bottom, #ffffff 0%, #e0e0e0 20%, #bdbdbd 45%, #888888 55%, #aaaaaa 80%, #666666 100%);
+  --bold-line: 3px solid #000;
+}
+
+body {
+  background-color: var(--bg-color);
+  font-family: 'Arial Black', Arial, sans-serif;
+  color: white;
+  padding: 0;
+  margin: 0;
+  overflow-x: hidden;
+  min-height: 100vh;
+}
+
+/* カード展開時は背景スクロール禁止 */
+body.mode-expanded {
+  overflow: hidden !important;
+  touch-action: none;
+}
+
+.screen { padding: 20px; box-sizing: border-box; width: 100%; min-height: 100vh; transition: opacity 0.5s; }
+.hidden { display: none !important; }
+
+h1 { text-align: center; margin-bottom: 30px; text-shadow: 3px 3px 0 rgba(0,0,0,0.8); font-style: italic; transition: opacity 0.5s; padding: 0 90px; box-sizing: border-box; font-size: clamp(1.3rem, 4vw, 2rem); }
