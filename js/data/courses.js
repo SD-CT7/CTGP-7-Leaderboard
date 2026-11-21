@@ -7,7 +7,7 @@ export const GLITCH_COURSES = [
   "N64 Rainbow Road"
 ];
 
-export const rawCsvData = [
+export const RAW_CSV_DATA = [
   { name: "Concord Town", file: "033_Concord_Town" }, { name: "N64 Mario Raceway", file: "034_N64_Mario_Raceway" }, { name: "Galvarny Falls", file: "035_Galvarny_Falls" }, { name: "GBA Sky Garden", file: "036_GBA_Sky_Garden" },
   { name: "Autumn Forest", file: "037_Autumn_Forest" }, { name: "GBA Riverside Park", file: "038_GBA_Riverside_Park" }, { name: "RMX Mario Circuit 1", file: "039_RMX_Mario_Circuit_1" }, { name: "GBA Bowser Castle 3", file: "040_GBA_Bowser_Castle_3" },
   { name: "N64 Frappe Snowland", file: "041_N64_Frappe_Snowland" }, { name: "N64 Moo Moo Farm", file: "042_N64_Moo_Moo_Farm" }, { name: "DS Delfino Square", file: "043_DS_Delfino_Square" }, { name: "GCN Mario Circuit", file: "044_GCN_Mario_Circuit" },
