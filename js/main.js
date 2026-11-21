@@ -1,6 +1,8 @@
 // js/main.js  ── Step 3 完了版
 
 // ===== import =====
+import { escapeAttr } from './utils/dom.js';
+
 import {
   RANK_IMG_BASE, RANK_EXT,
   CSV_URLS,
