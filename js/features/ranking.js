@@ -3,9 +3,8 @@ import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
 import { escapeAttr } from '../utils/dom.js';
 import { RANK_IMG_BASE, RANK_EXT, FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
-import { getVideoIcon, openVideoModal } from '../ui/videoModal.js';
-import { getRankImageSrc } from '../utils/dom.js'; // インポートに追加
-import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js'; // isModalVideoIcon をインポート
+import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js';
+import { getRankImageSrc } from '../utils/dom.js';
 
 export function switchCategory(cat) {
   let key = (cat === '200cc' || cat === 'Shroomless') ? 'Default' : cat;
@@ -107,13 +106,13 @@ export function renderRankingList() {
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
     const timeHtml = hasVid ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>` : d.time;
     const rankContent = d.rank <= 8 ? `<img src="${RANK_IMG_BASE}${d.rank}${RANK_EXT}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">` : `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
-    
-    const iconHtml = hasVid 
-      ? (['Youtube.webp', 'Discord.webp', 'Filenow.webp'].includes(iconSrc) 
-        ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>` 
+    const isModalTarget = isModalVideoIcon(iconSrc);
+
+const iconHtml = hasVid
+      ? (isModalTarget
+        ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`
         : `<a href="${escapeAttr(d.video)}" target="_blank"><img src="${iconSrc}"></a>`)
       : `<div class="no-link"><img src="Novideo.webp"></div>`;
-
     row.innerHTML = `<div class="section col-rank">${rankContent}</div><div class="section col-name">${nameHtml}</div><div class="section col-time">${timeHtml}</div><div class="section col-icon">${iconHtml}</div><div class="section col-flag">${flagHtml}</div>`;
     listEl.appendChild(row);
   }
