@@ -756,30 +756,10 @@ function closeVideoModal() {
   }, 300); 
 }
 
-// ===== window 公開（Step 4a で addEventListener 化するまでの暫定） =====
-// UI 関数（HTML の onclick 属性から呼ばれる）
-window.openLeaderboard = openLeaderboard;
-window.closeLeaderboard = closeLeaderboard;
-window.handleGlobalClose = handleGlobalClose;
+// ===== window 公開（Step 4b 完了まで暫定） =====
+// 動的HTML（renderRankingList / renderPlayerLeaderboard / renderPlayerProfileRecords）から呼ばれる
 window.openPlayerProfile = openPlayerProfile;
-window.closePlayerProfile = closePlayerProfile;
-window.openCountryFilterMenu = openCountryFilterMenu;
-window.closeCountryFilterMenu = closeCountryFilterMenu;
-window.showRegionList = showRegionList;
-window.showCountryList = showCountryList;
-window.switchCategory = switchCategory;
-window.switchProfileCategory = switchProfileCategory;
-window.setProfileSortMode = setProfileSortMode;
-window.goBackToCups = goBackToCups;
-window.toggleMode = toggleMode;
-window.toggleGlitchMode = toggleGlitchMode;
-window.toggleReadMore = toggleReadMore;
 window.openVideoModal = openVideoModal;
-window.closeVideoModal = closeVideoModal;
-window.openCategoryMenu = openCategoryMenu;
-window.closeCategoryMenu = closeCategoryMenu;
-window.openProfileCategoryMenu = openProfileCategoryMenu;
-window.closeProfileCategoryMenu = closeProfileCategoryMenu;
 
 // loader.js から参照される状態・関数
 window.allCategoryData = allCategoryData;
@@ -789,6 +769,85 @@ window.globalPlayerCountryMap = globalPlayerCountryMap;
 window.switchCategory = switchCategory;
 window.checkInitialPlayerRoute = checkInitialPlayerRoute;
 
+// ===== Step 4a: 静的 onclick の addEventListener 化 =====
+
+function initStaticEventListeners() {
+  // ① 全体×ボタン
+  document.querySelector('.close-btn').addEventListener('click', handleGlobalClose);
+
+  // ② リーダーボード開閉
+  document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
+  document.querySelector('#leaderboard-panel .panel-close-btn').addEventListener('click', closeLeaderboard);
+  document.querySelector('#leaderboard-panel .earth-btn').addEventListener('click', openCountryFilterMenu);
+
+  // ③ 動画モーダル
+  document.getElementById('video-modal').addEventListener('click', closeVideoModal);
+  document.querySelector('#video-modal .modal-content').addEventListener('click', (e) => e.stopPropagation());
+  document.querySelector('#video-modal .close-modal-btn').addEventListener('click', closeVideoModal);
+
+  // ④ ランキング画面ヘッダ
+  document.querySelector('#ranking-screen .back-btn').addEventListener('click', goBackToCups);
+  document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
+  document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
+  document.querySelector('#ranking-screen .earth-btn').addEventListener('click', openCountryFilterMenu);
+  document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', openCategoryMenu);
+
+  // ⑤ カプセル（5個）→ イベント委譲
+  document.querySelector('.capsule').addEventListener('click', (e) => {
+    const item = e.target.closest('.capsule-item[data-cat]');
+    if (!item) return;
+    switchCategory(item.dataset.cat);
+  });
+
+  // ⑥ スマホ用カテゴリメニュー（ランキング）
+  const mobileCatOverlay = document.getElementById('mobile-category-overlay');
+  mobileCatOverlay.addEventListener('click', closeCategoryMenu);
+  mobileCatOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
+  mobileCatOverlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
+    item.addEventListener('click', () => {
+      switchCategory(item.dataset.cat);
+      closeCategoryMenu();
+    });
+  });
+
+  // ⑦ 国フィルター
+  const cfOverlay = document.getElementById('country-filter-overlay');
+  cfOverlay.addEventListener('click', closeCountryFilterMenu);
+  cfOverlay.querySelector('.country-filter-box').addEventListener('click', (e) => e.stopPropagation());
+  document.getElementById('cf-back-btn').addEventListener('click', showRegionList);
+  cfOverlay.querySelector('.cf-close-btn').addEventListener('click', closeCountryFilterMenu);
+
+  // ⑧ プレイヤープロフィール
+  document.querySelector('#player-profile-panel .panel-close-btn').addEventListener('click', () => closePlayerProfile());
+  document.querySelector('#player-profile-panel .pp-mobile-btn').addEventListener('click', openProfileCategoryMenu);
+
+  // ⑨ プロフィールのタブ（5個）→ 委譲
+  document.getElementById('pp-tabs').addEventListener('click', (e) => {
+    const tab = e.target.closest('.pp-tab[data-cat]');
+    if (!tab) return;
+    switchProfileCategory(tab.dataset.cat);
+  });
+
+  // ⑩ プロフィールのスマホカテゴリメニュー
+  const profileMobileOverlay = document.getElementById('profile-mobile-category-overlay');
+  profileMobileOverlay.addEventListener('click', closeProfileCategoryMenu);
+  profileMobileOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
+  profileMobileOverlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
+    item.addEventListener('click', () => {
+      switchProfileCategory(item.dataset.cat);
+      closeProfileCategoryMenu();
+    });
+  });
+
+  // ⑪ プロフィールのソートトグル（2個）→ 委譲
+  document.getElementById('pp-sort-toggle').addEventListener('click', (e) => {
+    const opt = e.target.closest('.sort-toggle-option[data-sort]');
+    if (!opt) return;
+    setProfileSortMode(opt.dataset.sort);
+  });
+}
+
 // ===== 初期化 =====
+initStaticEventListeners();
 preloadStaticIcons();
 startLoadingProcess();
