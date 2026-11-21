@@ -10,6 +10,12 @@ export function getVideoIcon(url) {
   return 'img/favicon/novideo.webp';
 }
 
+export function isModalVideoIcon(iconSrc) {
+  return iconSrc.includes('youtube.webp') || 
+         iconSrc.includes('discord.webp') || 
+         iconSrc.includes('filenow.webp');
+}
+
 export function openVideoModal(url) {
   const youtubeFrame = document.getElementById('youtube-frame');
   const modalImage = document.getElementById('modal-image');
