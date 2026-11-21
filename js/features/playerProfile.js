@@ -2,7 +2,7 @@ import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { escapeAttr } from '../utils/dom.js';
 import { RANK_IMG_BASE, RANK_EXT } from '../config.js';
-import { getVideoIcon } from '../ui/videoModal.js';
+import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js'; // isModalVideoIcon をインポート
 
 export function getPlayerCourseRows(name, catKey) {
   let key = (catKey === '200cc' || catKey === 'Shroomless') ? 'Default' : catKey;
@@ -47,7 +47,7 @@ export function renderPlayerProfileRecords() {
 
     if (hasRecord && r.video && r.video !== '-') {
       const iconSrc = getVideoIcon(r.video);
-      const isModalTarget = ['Youtube.webp', 'Discord.webp', 'Filenow.webp'].includes(iconSrc);
+      const isModalTarget = isModalVideoIcon(iconSrc);
       const safeHref = escapeAttr(String(r.video));
       timeHtml = `<a href="${safeHref}" target="_blank" rel="noopener" class="time-link">${r.time}</a>`;
       iconHtml = isModalTarget 
