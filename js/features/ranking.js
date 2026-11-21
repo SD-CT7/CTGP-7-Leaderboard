@@ -20,7 +20,7 @@ export function showRankingScreen(c) {
   state.currentSelectedCourse = c;
   state.currentTire = 'without';
   state.isGlitch = false;
-  state.isReadMoreExpanded = false; 
+  state.isReadMoreExpanded = false;
   updateToggleUI();
 
   document.body.classList.remove('mode-expanded');
@@ -35,9 +35,9 @@ export function showRankingScreen(c) {
   window.scrollTo(0, 0);
 }
 
-export function goBackToCups() { 
-  document.getElementById('ranking-screen').classList.add('hidden'); 
-  document.getElementById('cup-select-screen').classList.remove('hidden'); 
+export function goBackToCups() {
+  document.getElementById('ranking-screen').classList.add('hidden');
+  document.getElementById('cup-select-screen').classList.remove('hidden');
   state.currentSelectedCourse = null;
   if (state.activeCard) document.body.classList.add('mode-expanded');
 }
@@ -67,25 +67,25 @@ function updateToggleUI() {
   optWithout.classList.remove('selected');
   optDekatire.classList.remove('selected');
   btnGlitch.classList.remove('active');
-  
+
   if (state.currentTire === 'without') optWithout.classList.add('selected');
   else optDekatire.classList.add('selected');
-  
+
   if (state.isGlitch) btnGlitch.classList.add('active');
 }
 
 export function renderRankingList() {
   const listEl = document.getElementById('rankingList');
   listEl.innerHTML = '';
-  
+
   let key = state.currentSelectedCourse.file.substring(4);
   if (state.isGlitch) key += "_G";
 
   let data = state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : [];
   data = data.filter(d => countryMatchesFilter(d.country));
-  
+
   const displayCount = state.isReadMoreExpanded ? data.length : 8;
-  
+
   for (let i = 0; i < displayCount; i++) {
     const d = data[i] || (i < 8 ? { rank: i+1, name: "---", time: "--:--", video: "-", country: "-" } : null);
     if (!d) continue;
@@ -93,28 +93,28 @@ export function renderRankingList() {
     const row = document.createElement('div');
     row.className = `rank-row ${d.rank === 1 ? 'rank-1st' : ''} animate-slide-in`;
     row.style.animationDelay = `${(i+1)*0.04}s`;
-    
+
     const iconSrc = getVideoIcon(d.video);
     const hasVid = (d.video !== '-' && d.video !== '' && iconSrc !== 'Novideo.webp');
-    
-let flagHtml = '';
-if (d.country && d.country !== '-') {
-  const countryCode = d.country.toLowerCase();
-  flagHtml = `<img src="${countryCode === 'scotland' ? 'img/flag/scotland.webp' : `${FLAG_BASE_URL}${countryCode}.svg`}" onerror="this.style.visibility='hidden'">`;
-}
+
+    let flagHtml = '';
+    if (d.country && d.country !== '-') {
+      const countryCode = d.country.toLowerCase();
+      flagHtml = `<img src="${countryCode === 'scotland' ? 'img/flag/scotland.webp' : `${FLAG_BASE_URL}${countryCode}.svg`}" onerror="this.style.visibility='hidden'">`;
+    }
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
     const timeHtml = hasVid ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>` : d.time;
-let rankContent;
-if (d.rank <= 8) {
-  rankContent = `<img src="${getRankImageSrc(d.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">`;
-} else {
-  rankContent = `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
-}
+    let rankContent;
+    if (d.rank <= 8) {
+      rankContent = `<img src="${getRankImageSrc(d.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">`;
+    } else {
+      rankContent = `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
+    }
     const isModalTarget = isModalVideoIcon(iconSrc);
 
   const isModalTarget = isModalVideoIcon(iconSrc);
 
-const iconHtml = hasVid
+    const iconHtml = hasVid
       ? (isModalTarget
         ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`
         : `<a href="${escapeAttr(d.video)}" target="_blank"><img src="${iconSrc}"></a>`)
