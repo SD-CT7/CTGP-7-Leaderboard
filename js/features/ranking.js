@@ -112,8 +112,6 @@ export function renderRankingList() {
     }
     const isModalTarget = isModalVideoIcon(iconSrc);
 
-  const isModalTarget = isModalVideoIcon(iconSrc);
-
     const iconHtml = hasVid
       ? (isModalTarget
         ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`
