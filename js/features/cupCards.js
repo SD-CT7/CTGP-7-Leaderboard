@@ -1,6 +1,10 @@
+// js/features/cupCards.js の先頭部分をこう書き換えてください
 import { state } from '../state.js';
-import { RAW_CSV_DATA, COURSES_PER_CUP, ICON_BASE_PATH, SCALE_FACTOR, SIDEBAR_WIDTH } from '../config.js';
+import { RAW_CSV_DATA } from '../data/courses.js'; // ← ここを修正
+import { COURSES_PER_CUP, ICON_BASE_PATH, SCALE_FACTOR, SIDEBAR_WIDTH } from '../config.js';
 import { showRankingScreen } from './ranking.js';
+
+// ... 以下は変更なし ...
 
 export function expandCard(card) {
   const rect = card.getBoundingClientRect();
