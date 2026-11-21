@@ -1,32 +1,39 @@
-<!DOCTYPE html><html lang="ja"><head>
-<meta charset="UTF-8">
-<!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-K8KRHMR2FT"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', 'G-K8KRHMR2FT');
-</script>
-<!-- 100% privacy-first analytics -->
-<script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Official Time Trial (TT) & TA Leaderboard for Mario Kart 7 Custom Tracks (CTGP-7 / CTGP7 / CT7). Check the latest world records and rankings. マリオカート7 カスタムトラックのタイムアタック(TA・TT)ランキング・世界記録まとめサイトです。">
-<title>CTGP-7 TT Leaderboard</title>
-<link rel="icon" type="image/x-icon" href="/favicon.ico">
-<meta name="google-site-verification" content="PtHCcC0MvOGzZiMDQwL14gEuNdEO_nUdO_RQ9Enl7cI" />
-<!-- CSS: 元の<style>記述順を維持 -->
-<base href="./">
-<link rel="stylesheet" href="./css/base.css">
-<link rel="stylesheet" href="./css/loading.css">
-<link rel="stylesheet" href="./css/cups.css">
-<link rel="stylesheet" href="./css/ranking.css">
-<link rel="stylesheet" href="./css/panels.css">
-<link rel="stylesheet" href="./css/modals.css">
-<link rel="stylesheet" href="./css/mobile.css">
-</head>
-<body>
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
 
+  <!-- Google tag (gtag.js) -->
+  <script async src="https://www.googletagmanager.com/gtag/js?id=G-K8KRHMR2FT"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'G-K8KRHMR2FT');
+  </script>
+
+  <!-- 100% privacy-first analytics -->
+  <script async src="https://scripts.simpleanalyticscdn.com/latest.js"></script>
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Official Time Trial (TT) &amp; TA Leaderboard for Mario Kart 7 Custom Tracks (CTGP-7 / CTGP7 / CT7). Check the latest world records and rankings. マリオカート7 カスタムコースのタイムアタックランキング。">
+  <title>CTGP-7 TT Leaderboard</title>
+
+  <link rel="icon" type="image/x-icon" href="/favicon.ico">
+  <meta name="google-site-verification" content="PtHCcC0MvOGzZiMDQwL14gEuNdEO_nUdO_RQ9Enl7cI">
+
+  <!-- CSS -->
+  <base href="./">
+  <link rel="stylesheet" href="./css/base.css">
+  <link rel="stylesheet" href="./css/loading.css">
+  <link rel="stylesheet" href="./css/cups.css">
+  <link rel="stylesheet" href="./css/ranking.css">
+  <link rel="stylesheet" href="./css/panels.css">
+  <link rel="stylesheet" href="./css/modals.css">
+  <link rel="stylesheet" href="./css/mobile.css">
+</head>
+
+<body>
   <div id="loading-screen">
     <div class="loading-text">Now Loading...</div>
     <div class="progress-container">
@@ -35,7 +42,7 @@
   </div>
 
   <div id="data-status" style="display:none">Initializing...</div>
-  
+
   <div id="video-modal">
     <div class="modal-content">
       <div class="close-modal-btn">×</div>
@@ -47,15 +54,18 @@
 
   <div id="cup-select-screen" class="screen">
     <h1>CTGP-7 TT Leaderboard</h1>
-    <div id="overlay"></div><div class="close-btn">×</div>
+    <div id="overlay"></div>
+    <div class="close-btn">×</div>
 
     <div class="leaderboard-btn" id="leaderboard-btn">
-      <img src="person.webp" alt="Players" onerror="this.style.display='none'">
+      <img src="img/person.webp" alt="Players" onerror="this.style.display='none'">
     </div>
 
     <div id="leaderboard-panel" class="expand-panel hidden">
       <div class="lb-header">
-        <div class="earth-btn"><img src="Earth.webp" onerror="this.style.display='none'"></div>
+        <div class="earth-btn">
+          <img src="img/earth.webp" onerror="this.style.display='none'">
+        </div>
         <h2>Player Leaderboard</h2>
         <div class="panel-close-btn">×</div>
       </div>
@@ -65,84 +75,100 @@
     </div>
 
     <div class="cups-container" id="cupsContainer"></div>
-    
+
     <div class="info-container">
       <fieldset>
-          <legend>Credits</legend>
-          <div class="info-content info-credits-list">
-              <a href="https://x.com/SB_CTGP" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <span>@SD</span>
-                  <img src="X.webp" alt="" class="info-icon">
-              </a>
-              <a href="https://www.youtube.com/@Pierre__" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <span>@Pierre</span>
-                  <img src="Youtube.webp" alt="" class="info-icon">
-              </a>
-          </div>
+        <legend>Credits</legend>
+        <div class="info-content info-credits-list">
+          <a href="https://x.com/SB_CTGP" target="_blank" rel="noopener noreferrer" class="info-item">
+            <span>@SD</span>
+            <img src="X.webp" alt="" class="info-icon">
+          </a>
+          <a href="https://www.youtube.com/@Pierre__" target="_blank" rel="noopener noreferrer" class="info-item">
+            <span>@Pierre</span>
+            <img src="Youtube.webp" alt="" class="info-icon">
+          </a>
+        </div>
       </fieldset>
 
       <fieldset>
-          <legend>Other links</legend>
-          <div class="info-content info-grid">
-              <a href="https://docs.google.com/spreadsheets/d/1I8z7cbKY2tpw2BvKi1hA3KPifSOOlkR6ji3NvbdE1a0" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <img src="excel.webp" alt="" class="info-icon">
-                  <span>Top5s</span>
-              </a>
-              <a href="https://docs.google.com/spreadsheets/d/1aqhIBbpPZBoziX9KXVK7c4JL9Zir7OLp0uWcgjoFn90" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <img src="excel.webp" alt="" class="info-icon">
-                  <span>Chart</span>
-              </a>
-              <a href="https://docs.google.com/spreadsheets/d/1t-iFEK_NHvX9LVMvH1_hjLXI_47ti9H-4awDXuEpUm8" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <img src="excel.webp" alt="" class="info-icon">
-                  <span>Players</span>
-              </a>
-              <a href="https://discord.gg/MExtXDS43u" target="_blank" rel="noopener noreferrer" class="info-item">
-                  <img src="Discord.webp" alt="" class="info-icon">
-                  <span>Discord</span>
-              </a>
-          </div>
+        <legend>Other links</legend>
+        <div class="info-content info-grid">
+          <a href="https://docs.google.com/spreadsheets/d/1I8z7cbKY2tpw2BvKi1hA3KPifSOOlkR6ji3NvbdE1a0" target="_blank" rel="noopener noreferrer" class="info-item">
+            <img src="excel.webp" alt="" class="info-icon">
+            <span>Top5s</span>
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1aqhIBbpPZBoziX9KXVK7c4JL9Zir7OLp0uWcgjoFn90" target="_blank" rel="noopener noreferrer" class="info-item">
+            <img src="excel.webp" alt="" class="info-icon">
+            <span>Chart</span>
+          </a>
+          <a href="https://docs.google.com/spreadsheets/d/1t-iFEK_NHvX9LVMvH1_hjLXI_47ti9H-4awDXuEpUm8" target="_blank" rel="noopener noreferrer" class="info-item">
+            <img src="excel.webp" alt="" class="info-icon">
+            <span>Players</span>
+          </a>
+          <a href="https://discord.gg/MExtXDS43u" target="_blank" rel="noopener noreferrer" class="info-item">
+            <img src="Discord.webp" alt="" class="info-icon">
+            <span>Discord</span>
+          </a>
+        </div>
       </fieldset>
     </div>
   </div>
 
   <div id="ranking-screen" class="screen hidden">
     <div class="capsule">
-      <div class="capsule-item" data-tooltip="General" data-cat="General"><img src="General.webp"></div>
-      <div class="capsule-item" data-tooltip="Flap" data-cat="Flap"><img src="Flap.webp"></div>
-      <div class="capsule-item" data-tooltip="200cc" data-cat="200cc"><img src="200cc.webp"></div>
-      <div class="capsule-item" data-tooltip="Shroomless" data-cat="Shroomless"><img src="Shroomless.webp"></div>
-      <div class="capsule-item" data-tooltip="Mission" data-cat="Mission"><img src="Mission.webp"></div>
+      <div class="capsule-item" data-tooltip="General" data-cat="General">
+        <img src="img/category/general.webp">
+      </div>
+      <div class="capsule-item" data-tooltip="Flap" data-cat="Flap">
+        <img src="img/category/flap.webp">
+      </div>
+      <div class="capsule-item" data-tooltip="200cc" data-cat="200cc">
+        <img src="img/category/200cc.webp">
+      </div>
+      <div class="capsule-item" data-tooltip="Shroomless" data-cat="Shroomless">
+        <img src="img/category/shroomless.webp">
+      </div>
+      <div class="capsule-item" data-tooltip="Mission" data-cat="Mission">
+        <img src="img/category/mission.webp">
+      </div>
     </div>
-    
+
     <div id="mobile-category-overlay" class="mobile-category-overlay">
       <div class="mobile-category-list">
         <div class="mobile-category-item" data-cat="General">
-          <img src="General.webp"> General
+          <img src="img/category/general.webp"> General
         </div>
         <div class="mobile-category-item" data-cat="Flap">
-          <img src="Flap.webp"> Flap
+          <img src="img/category/flap.webp"> Flap
         </div>
         <div class="mobile-category-item" data-cat="200cc">
-          <img src="200cc.webp"> 200cc
+          <img src="img/category/200cc.webp"> 200cc
         </div>
         <div class="mobile-category-item" data-cat="Shroomless">
-          <img src="Shroomless.webp"> Shroomless
+          <img src="img/category/shroomless.webp"> Shroomless
         </div>
         <div class="mobile-category-item" data-cat="Mission">
-          <img src="Mission.webp"> Mission
+          <img src="img/category/mission.webp"> Mission
         </div>
       </div>
     </div>
 
     <div class="ranking-header">
       <button class="back-btn">← Back</button>
+
       <div class="mode-toggle-container">
         <div class="mode-toggle">
-          <div class="toggle-option selected" id="opt-without" data-tooltip="Any tires"><img src="img/kart/tire/normal.webp" id="opt-without-img"></div>
-          <div class="toggle-option" id="opt-dekatire" data-tooltip="Monster tires only"><img src="img/kart/tire/redmonster.webp" id="opt-dekatire-img"></div>
+          <div class="toggle-option selected" id="opt-without" data-tooltip="Any tires">
+            <img src="img/kart/tire/normal.webp" id="opt-without-img">
+          </div>
+          <div class="toggle-option" id="opt-dekatire" data-tooltip="Monster tires only">
+            <img src="img/kart/tire/redmonster.webp" id="opt-dekatire-img">
+          </div>
         </div>
+
         <div id="glitch-btn" class="glitch-btn hidden" data-tooltip="Glitch Category">G</div>
-        
+
         <div class="mobile-category-btn">
           <div class="uu-box"></div>
           <div class="uu-box"></div>
@@ -154,11 +180,13 @@
         </div>
 
         <div class="earth-btn">
-          <img src="Earth.webp" onerror="this.style.display='none'">
+          <img src="img/earth.webp" onerror="this.style.display='none'">
         </div>
       </div>
+
       <h2 id="ranking-course-title" class="course-title">Course Name</h2>
     </div>
+
     <div class="ranking-list" id="rankingList"></div>
   </div>
 
@@ -174,13 +202,27 @@
   </div>
 
   <div id="player-profile-panel" class="expand-panel hidden">
-    <div class="lb-header"><h2 id="pp-name">Player</h2><div class="panel-close-btn">×</div></div>
+    <div class="lb-header">
+      <h2 id="pp-name">Player</h2>
+      <div class="panel-close-btn">×</div>
+    </div>
+
     <div class="pp-tabs" id="pp-tabs">
-      <div class="pp-tab selected" data-cat="General"><img src="General.webp">General</div>
-      <div class="pp-tab" data-cat="Flap"><img src="Flap.webp">Flap</div>
-      <div class="pp-tab" data-cat="200cc"><img src="200cc.webp">200cc</div>
-      <div class="pp-tab" data-cat="Shroomless"><img src="Shroomless.webp">Shroomless</div>
-      <div class="pp-tab" data-cat="Mission"><img src="Mission.webp">Mission</div>
+      <div class="pp-tab selected" data-cat="General">
+        <img src="img/category/general.webp">General
+      </div>
+      <div class="pp-tab" data-cat="Flap">
+        <img src="img/category/flap.webp">Flap
+      </div>
+      <div class="pp-tab" data-cat="200cc">
+        <img src="img/category/200cc.webp">200cc
+      </div>
+      <div class="pp-tab" data-cat="Shroomless">
+        <img src="img/category/shroomless.webp">Shroomless
+      </div>
+      <div class="pp-tab" data-cat="Mission">
+        <img src="img/category/mission.webp">Mission
+      </div>
     </div>
 
     <div class="mobile-category-btn pp-mobile-btn">
@@ -196,19 +238,19 @@
     <div id="profile-mobile-category-overlay" class="mobile-category-overlay">
       <div class="mobile-category-list">
         <div class="mobile-category-item" data-cat="General">
-          <img src="General.webp"> General
+          <img src="img/category/general.webp"> General
         </div>
         <div class="mobile-category-item" data-cat="Flap">
-          <img src="Flap.webp"> Flap
+          <img src="img/category/flap.webp"> Flap
         </div>
         <div class="mobile-category-item" data-cat="200cc">
-          <img src="200cc.webp"> 200cc
+          <img src="img/category/200cc.webp"> 200cc
         </div>
         <div class="mobile-category-item" data-cat="Shroomless">
-          <img src="Shroomless.webp"> Shroomless
+          <img src="img/category/shroomless.webp"> Shroomless
         </div>
         <div class="mobile-category-item" data-cat="Mission">
-          <img src="Mission.webp"> Mission
+          <img src="img/category/mission.webp"> Mission
         </div>
       </div>
     </div>
@@ -225,6 +267,6 @@
     </div>
   </div>
 
-<script type="module" src="./js/main.js"></script>
-
-</body></html>
+  <script type="module" src="./js/main.js"></script>
+</body>
+</html>
