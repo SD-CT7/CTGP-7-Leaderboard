@@ -1,3 +1,4 @@
+// js/ui/videoModal.js
 export function getVideoIcon(url) {
   if (!url || url === '-') return 'Novideo.webp';
   const l = url.toLowerCase();
