@@ -1,6 +1,6 @@
 import { state } from '../state.js';
 import { countryMatchesFilter, openCountryFilterMenu } from './filter.js';
-import { escapeAttr } from '../utils/dom.js';
+import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
 import { RANK_IMG_BASE, RANK_EXT } from '../config.js';
 
 export function renderPlayerLeaderboard() {
@@ -15,7 +15,7 @@ export function renderPlayerLeaderboard() {
     row.dataset.player = p.name;
 
     const rankContent = p.rank <= 8 
-      ? `<img src="${RANK_IMG_BASE}${p.rank}${RANK_EXT}" onerror="this.style.display='none';this.parentElement.innerText='${p.rank}'">`
+      ? `<img src="${getRankImageSrc(p.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${p.rank}'">`
       : `${p.rank}`;
 
     row.innerHTML = `
