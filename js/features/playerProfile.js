@@ -1,7 +1,6 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
-import { escapeAttr } from '../utils/dom.js';
-import { RANK_IMG_BASE, RANK_EXT } from '../config.js';
+import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
 import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js'; // isModalVideoIcon をインポート
 
 export function getPlayerCourseRows(name, catKey) {
@@ -41,7 +40,7 @@ export function renderPlayerProfileRecords() {
     row.className = `record-row ${hasRecord && r.rank === 1 ? 'gold-rank' : ''} animate-slide-in`;
     row.style.animationDelay = `${Math.min(i + 1, 25) * 0.02}s`;
 
-    let rankContent = hasRecord ? (r.rank <= 8 ? `<img src="${RANK_IMG_BASE}${r.rank}${RANK_EXT}" onerror="this.style.display='none';this.parentElement.innerText='${r.rank}'">` : `${r.rank}`) : '-';
+    let rankContent = hasRecord ? (r.rank <= 8 ? `<img src="${getRankImageSrc(r.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${r.rank}'">` : `${r.rank}`) : '-';
     let iconHtml = `<img src="Novideo.webp">`;
     let timeHtml = hasRecord ? r.time : '-';
 
