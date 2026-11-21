@@ -627,8 +627,6 @@ function renderRankingList() {
     
     const iconSrc = getVideoIcon(d.video);
     const hasVid = (d.video !== '-' && d.video !== '' && iconSrc !== 'Novideo.webp');
-    const safeUrl = d.video.replace(/'/g, "\\'");
-    
     let flagHtml = '';
     if (d.country && d.country !== '-') {
       const countryCode = d.country.toLowerCase();
@@ -639,15 +637,14 @@ function renderRankingList() {
       }
     }
 
-    const safeName = d.name.replace(/'/g, "\\'");
     let nameHtml = d.name;
     if (d.name !== '---') {
-      nameHtml = `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" onclick="event.preventDefault();openPlayerProfile('${safeName}', this)">${d.name}</a>`;
+      nameHtml = `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>`;
     }
 
     const isModalTarget = (iconSrc === 'Youtube.webp' || iconSrc === 'Discord.webp' || iconSrc === 'Filenow.webp');
     const timeHtml = hasVid 
-      ? `<a href="${d.video}" target="_blank" class="time-link">${d.time}</a>`
+      ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>`
       : d.time;
 
     let rankContent = '';
@@ -660,9 +657,9 @@ function renderRankingList() {
     let iconHtml = `<div class="no-link"><img src="Novideo.webp"></div>`;
     if (hasVid) {
       if (isModalTarget) {
-        iconHtml = `<div onclick="openVideoModal('${safeUrl}')" style="cursor:pointer"><img src="${iconSrc}"></div>`;
+        iconHtml = `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`;
       } else {
-        iconHtml = `<a href="${d.video}" target="_blank"><img src="${iconSrc}"></a>`;
+        iconHtml = `<a href="${escapeAttr(d.video)}" target="_blank"><img src="${iconSrc}"></a>`;
       }
     }
 
@@ -774,6 +771,21 @@ window.checkInitialPlayerRoute = checkInitialPlayerRoute;
 // ===== Step 4a: 静的 onclick の addEventListener 化 =====
 
 function initStaticEventListeners() {
+  // ランキング項目（プレイヤー / モーダル動画）→ イベント委譲
+  rankingListEl.addEventListener('click', (e) => {
+    const playerLink = e.target.closest('.name-link[data-player]');
+    if (playerLink) {
+      e.preventDefault();
+      openPlayerProfile(playerLink.dataset.player, playerLink);
+      return;
+    }
+
+    const videoIcon = e.target.closest('.video-icon[data-video-url]');
+    if (videoIcon) {
+      openVideoModal(videoIcon.dataset.videoUrl);
+    }
+  });
+
   // ① 全体×ボタン
   document.querySelector('.close-btn').addEventListener('click', handleGlobalClose);
 
