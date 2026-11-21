@@ -1,3 +1,7 @@
+// js/config.js の末尾などに追記
+export const SUPABASE_URL = 'https://fpbwgncudjekqwplluct.supabase.co';
+export const SUPABASE_KEY = 'sb_publishable_CxryfeGj45IL6opyJJlEAg_s985qwS9';
+
 export const CSV_URLS = {
   Default: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdLethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokrM5dEFo/pub?gid=2103674373&single=true&output=csv",
   Flap: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdLethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokrM5dEFo/pub?gid=1016759313&single=true&output=csv",
