@@ -64,7 +64,7 @@ export const REGION_DATA = {
     { code: "co", name: "Colombia" }, { code: "pe", name: "Peru" }, { code: "ve", name: "Venezuela" },
     { code: "ec", name: "Ecuador" }, { code: "bo", name: "Bolivia" }, { code: "py", name: "Paraguay" },
     { code: "uy", name: "Uruguay" }, { code: "gy", name: "Guyana" }, { code: "sr", name: "Suriname" },
-  ],
+  ], +};
 export const SELECTABLE_REGIONS = ["Asia", "Europe", "Africa", "Oceania", "North America"];
 
 export const COUNTRY_TO_REGION = {};
