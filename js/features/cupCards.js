@@ -63,7 +63,7 @@ export function initCupCards() {
             showRankingScreen(c); 
           } 
         };
-        w.innerHTML = `<img src="${c.file}.webp" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+        w.innerHTML = `<img src="img/trackImage/${c.file}.webp" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
         grid.appendChild(w);
       });
       
