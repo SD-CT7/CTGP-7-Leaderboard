@@ -3,13 +3,13 @@ export const SUPABASE_URL = 'https://fpbwgncudjekqwplluct.supabase.co';
 export const SUPABASE_KEY = 'sb_publishable_CxryfeGj45IL6opyJJlEAg_s985qwS9';
 
 export const CSV_URLS = {
-  Default: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdLethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokrM5dEFo/pub?gid=2103674373&single=true&output=csv",
-  Flap: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdLethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokrM5dEFo/pub?gid=1016759313&single=true&output=csv",
-  Mission: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdLethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokrM5dEFo/pub?gid=1676868794&single=true&output=csv"
+  Default: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=2103674373&single=true&output=csv",
+  Flap: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1016759313&single=true&output=csv",
+  Mission: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1676868794&single=true&output=csv"
 };
 
 export const PLAYER_LEADERBOARD_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vScYBDDVnDZcLrhBuS9Kg1fq60UTv3YDKeNBtwd0gepQ7z3QRg24IRmeteUWcrM5dEFo/pub?gid=1119970158&single=true&output=csv";
+  "https://docs.google.com/spreadsheets/d/e/2PACX-1vScYBDDVnDZcLrhBuS9Kg1fq60UTv3YDKeNBtwd0gepQ7Tz8QRg24IRmeteUWcrM7EiXEZwXeyEUFql/pub?gid=1119970158&single=true&output=csv";
 
 export const RANK_IMG_BASE = "img/rank/";
 export const RANK_EXT = ".webp";
