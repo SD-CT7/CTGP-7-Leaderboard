@@ -105,8 +105,15 @@ export function renderRankingList() {
 
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
     const timeHtml = hasVid ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>` : d.time;
-    const rankContent = d.rank <= 8 ? `<img src="${RANK_IMG_BASE}${d.rank}${RANK_EXT}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">` : `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
+let rankContent;
+if (d.rank <= 8) {
+  rankContent = `<img src="${getRankImageSrc(d.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">`;
+} else {
+  rankContent = `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
+}
     const isModalTarget = isModalVideoIcon(iconSrc);
+
+  const isModalTarget = isModalVideoIcon(iconSrc);
 
 const iconHtml = hasVid
       ? (isModalTarget
