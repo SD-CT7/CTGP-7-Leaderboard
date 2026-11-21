@@ -72,7 +72,7 @@ export async function startLoadingProcess() {
   let playerLeaderboardData = window.playerLeaderboardData;
 
   // Default / Flap / Mission はCSVから取得
-  const csvPromises = Object.keys(CSV_URLS).map(async (key) => {
+  const csvPromises = Object.keys(CSV_URLs).map(async (key) => {
     const url = CSV_URLS[key];
     try {
       const res = await fetch(url + "&t=" + Date.now());
@@ -104,7 +104,7 @@ export async function startLoadingProcess() {
 
       const generalData = {};
       for (const row of rows) {
-        const track = row.track_name;
+        const track = String(row.track_name || '').toLowerCase();
         if (!generalData[track]) {
           generalData[track] = { without: [], dekatire: [] };
         }
