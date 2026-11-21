@@ -4,6 +4,8 @@ import { escapeAttr } from '../utils/dom.js';
 import { RANK_IMG_BASE, RANK_EXT, FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, openVideoModal } from '../ui/videoModal.js';
+import { getRankImageSrc } from '../utils/dom.js'; // インポートに追加
+import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js'; // isModalVideoIcon をインポート
 
 export function switchCategory(cat) {
   let key = (cat === '200cc' || cat === 'Shroomless') ? 'Default' : cat;
