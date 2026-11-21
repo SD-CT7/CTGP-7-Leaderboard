@@ -97,12 +97,11 @@ export function renderRankingList() {
     const iconSrc = getVideoIcon(d.video);
     const hasVid = (d.video !== '-' && d.video !== '' && iconSrc !== 'Novideo.webp');
     
-    let flagHtml = '';
-    if (d.country && d.country !== '-') {
-      const countryCode = d.country.toLowerCase();
-      flagHtml = `<img src="${countryCode === 'scotland' ? 'Scotland.webp' : `${FLAG_BASE_URL}${countryCode}.svg`}" onerror="this.style.visibility='hidden'">`;
-    }
-
+let flagHtml = '';
+if (d.country && d.country !== '-') {
+  const countryCode = d.country.toLowerCase();
+  flagHtml = `<img src="${countryCode === 'scotland' ? 'img/flag/scotland.webp' : `${FLAG_BASE_URL}${countryCode}.svg`}" onerror="this.style.visibility='hidden'">`;
+}
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
     const timeHtml = hasVid ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>` : d.time;
 let rankContent;
