@@ -1,0 +1,164 @@
+/* カップ選択画面 */
+.cups-container { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 25px; max-width: 1400px; margin: 0 auto; position: relative; }
+
+.cup-card {
+  background: var(--card-bg); border: 3px solid var(--border-color); border-radius: 12px;
+  position: relative; overflow: hidden; cursor: pointer; 
+  box-shadow: 4px 4px 0 rgba(0,0,0,0.6);
+  
+  transition: width var(--transition-speed) var(--easing-smooth), 
+              height var(--transition-speed) var(--easing-smooth), 
+              top var(--transition-speed) var(--easing-smooth), 
+              left var(--transition-speed) var(--easing-smooth), 
+              transform var(--hover-speed) var(--easing-smooth), 
+              padding-left var(--transition-speed) var(--easing-smooth), 
+              border-color var(--hover-speed), 
+              opacity 0.5s ease;
+  z-index: 1; box-sizing: border-box; padding-left: 0; 
+}
+
+.cup-card:not(.active):hover { 
+  transform: translateY(-5px) scale(1.02); 
+  border-color: var(--highlight); 
+  z-index: 10; 
+}
+
+.cup-card.active { 
+  z-index: 1000; 
+  border-color: var(--highlight); 
+  cursor: default; 
+  box-shadow: 0 0 0 2000px rgba(0,0,0,0.85); 
+  padding-left: var(--sidebar-width); 
+  overflow: visible; 
+}
+
+body.mode-expanded .cup-card:not(.active) { opacity: 0; pointer-events: none; }
+body.mode-expanded h1 { opacity: 0; pointer-events: none; }
+
+/* 背景クリック用プレースホルダー */
+.cup-card-placeholder { visibility: hidden; border: 3px solid transparent; box-sizing: border-box; cursor: pointer; }
+
+/* グリッド設定 */
+.course-grid { 
+  display: grid; grid-template-columns: 1fr 1fr; gap: 2px; 
+  background-color: #000; padding: 2px; 
+  width: 100%; height: 100%; 
+  transition: width var(--transition-speed) var(--easing-smooth), height var(--transition-speed) var(--easing-smooth), margin var(--transition-speed) var(--easing-smooth);
+}
+
+/* デスクトップ用：枠の余白確保 */
+.cup-card.active .course-grid {
+  width: calc(100% - 50px);
+  height: calc(100% - 25px); 
+  margin-top: 12.5px;        
+}
+
+.course-img-wrapper { 
+  width: 100%; aspect-ratio: 35 / 24; background-color: #222; overflow: hidden; position: relative; 
+  transition: transform var(--hover-speed) var(--easing-smooth), filter 0.3s ease; 
+  touch-action: pan-y; 
+}
+
+.course-img-wrapper img { 
+  width: 100%; height: 100%; object-fit: cover; display: block; 
+  filter: brightness(0.7) grayscale(20%); 
+  transition: filter 0.3s ease;
+  pointer-events: none; 
+}
+
+.cup-card:not(.active):hover .course-img-wrapper img { filter: brightness(1.0) grayscale(0%); }
+.cup-card.active .course-img-wrapper { cursor: pointer; pointer-events: auto; }
+.cup-card.active .course-img-wrapper img { filter: brightness(1.0) grayscale(0%); pointer-events: none; }
+.cup-card.active .course-img-wrapper:hover { transform: translateY(-5px) scale(1.05); z-index: 2; }
+
+/* アイコン */
+.cup-icon-wrapper { position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); width: 100px; height: 100px; display: flex; align-items: center; justify-content: center; z-index: 5; pointer-events: none; transition: all var(--transition-speed); }
+.cup-icon-wrapper img { max-width: 100%; max-height: 100%; object-fit: contain; filter: brightness(0.8) drop-shadow(2px 2px 0 rgba(0,0,0,1.0)); }
+.cup-card.active .cup-icon-wrapper { left: calc(var(--sidebar-width) / 2); transform: translate(-50%, -50%) scale(1.5); }
+.cup-card.active .cup-icon-wrapper img { filter: brightness(1.1) drop-shadow(3px 3px 0 rgba(255, 255, 255, 0.3)); }
+
+/* その他UI要素 */
+#overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: transparent; z-index: 900; opacity: 0; pointer-events: none; transition: opacity 0.5s; }
+body.mode-expanded #overlay { opacity: 1; pointer-events: auto; }
+
+/* 画面右上の全体用×ボタン */
+.close-btn { position: fixed; top: 30px; right: 30px; width: 60px; height: 60px; background: #e74c3c; border: 4px solid #000; border-radius: 50%; color: #fff; font-size: 40px; font-family: Arial, sans-serif; line-height: 1; display: flex; align-items: center; justify-content: center; cursor: pointer; z-index: 2000; opacity: 0; pointer-events: none; transition: transform 0.15s, opacity 0.3s, background 0.15s; box-shadow: 4px 4px 0 rgba(0,0,0,0.5); }
+body.mode-expanded .close-btn { opacity: 1; pointer-events: auto; }
+.close-btn:hover { transform: scale(1.1); background: #ff5e57; }
+
+/* モーダルの白い×ボタン */
+.close-modal-btn { 
+  position: absolute; top: -50px; right: -10px; width: 40px; height: 40px; 
+  color: #fff; font-size: 40px; font-weight: bold; cursor: pointer; 
+  line-height: 1; text-align: center; 
+}
+
+/* Credits & Links (リンク対応版) */
+.info-container {
+  width: 100%;
+  max-width: 420px;
+  margin: 60px auto 20px auto; 
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  font-family: sans-serif;
+  color: white;
+  transition: opacity 0.5s; 
+}
+
+body.mode-expanded .info-container {
+  opacity: 0;
+  pointer-events: none;
+}
+
+.info-container fieldset {
+  border: 2px solid #ffffff;
+  border-radius: 15px;
+  padding: 20px;
+  box-sizing: border-box;
+}
+
+.info-container legend {
+  font-size: 24px;
+  font-weight: bold;
+  padding: 0 10px;
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.info-content {
+  font-size: 22px;
+  font-weight: bold;
+}
+
+.info-credits-list {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.info-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 15px 20px;
+}
+
+.info-item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+  transition: opacity 0.2s;
+  text-decoration: none;
+  color: white;
+}
+.info-item:hover {
+  opacity: 0.7;
+}
+
+.info-icon {
+  width: 24px;
+  height: 24px;
+  object-fit: contain;
+}
