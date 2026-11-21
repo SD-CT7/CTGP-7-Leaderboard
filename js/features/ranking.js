@@ -1,7 +1,7 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
 import { escapeAttr } from '../utils/dom.js';
-import { RANK_IMG_BASE, RANK_EXT, FLAG_BASE_URL } from '../config.js';
+import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
