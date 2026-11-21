@@ -10,6 +10,7 @@ export const CSV_URLS = {
 export const PLAYER_LEADERBOARD_CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vScYBDDVnDZcLrhBuS9Kg1fq60UTv3YDKeNBtwd0gepQ7Tz8QRg24IRmeteUWcrM7EiXEZwXeyEUFql/pub?gid=1119970158&single=true&output=csv";
 
 export const RANK_IMG_BASE = 'img/rank/';
+export const RANK_EXT = '.webp';
 export const ICON_BASE_PATH = 'img/cupImage/';
 
 // タイヤ画像のパス（トグルボタンなどで使用）
