@@ -1,12 +1,13 @@
 // js/ui/videoModal.js
+
 export function getVideoIcon(url) {
-  if (!url || url === '-') return 'Novideo.webp';
+  if (!url || url === '-') return 'img/favicon/novideo.webp';
   const l = url.toLowerCase();
-  if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) return 'Youtube.webp';
-  if (l.includes('twitter') || l.includes('x.com')) return 'X.webp';
-  if (l.includes('d.kuku.lu')) return 'Filenow.webp';
-  if (l.includes('discord')) return 'Discord.webp';
-  return 'Novideo.webp';
+  if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) return 'img/favicon/youtube.webp';
+  if (l.includes('twitter') || l.includes('x.com')) return 'img/favicon/x.webp';
+  if (l.includes('d.kuku.lu')) return 'img/favicon/filenow.webp';
+  if (l.includes('discord')) return 'img/favicon/discord.webp';
+  return 'img/favicon/novideo.webp';
 }
 
 export function openVideoModal(url) {
