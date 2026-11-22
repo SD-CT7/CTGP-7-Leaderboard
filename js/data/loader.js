@@ -9,7 +9,7 @@ import { parseRankingCsv, parsePlayerLeaderboardCsv } from './parser.js';
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
 const totalImages = STATIC_ICONS.length;
-const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1;
+const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1; // +1 Supabase General, +1 Supabase Flap, +1 Player Leaderboard
 const totalAssets = totalImages + totalCsvs;
 
 function updateProgress() {
@@ -71,7 +71,7 @@ export async function startLoadingProcess() {
   const allCategoryData = window.allCategoryData;
   let playerLeaderboardData = window.playerLeaderboardData;
 
-  // Default / Flap / Mission はCSVから取得
+  // Default / Mission はCSVから取得
   const csvPromises = Object.keys(CSV_URLS).map(async (key) => {
     const url = CSV_URLS[key];
     try {
@@ -126,6 +126,48 @@ export async function startLoadingProcess() {
     }
   })();
 
+  // Flap は Supabase(flap_leaderboard ビュー)から取得
+  const flapPromise = (async () => {
+    try {
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/flap_leaderboard?select=track_key,place,player,country,channel_url,time_ms,video_url&order=track_key,place,time_ms&limit=5000',
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+          }
+        }
+      );
+      if (!res.ok) throw new Error('Failed to load Flap from Supabase');
+      const rows = await res.json();
+
+      const fmtMs = (ms) => {
+        const m = Math.floor(ms / 60000);
+        const sec = Math.floor((ms % 60000) / 1000);
+        return m + ':' + String(sec).padStart(2, '0') + '.' + String(ms % 1000).padStart(3, '0');
+      };
+      const flapData = {};
+      for (const row of rows) {
+        const track = String(row.track_key || '').toLowerCase();
+        if (!flapData[track]) flapData[track] = { without: [], dekatire: [] };
+        flapData[track]['without'].push({
+          rank:    row.place,
+          name:    row.player,
+          time:    fmtMs(row.time_ms),
+          video:   row.video_url   || '-',
+          channel: row.channel_url || '-',
+          country: row.country     || '-',
+        });
+      }
+      allCategoryData['Flap'] = flapData;
+    } catch (e) {
+      console.warn(e);
+      allCategoryData['Flap'] = {};
+    } finally {
+      updateProgress();
+    }
+  })();
+
   // プレイヤーリーダーボードは公開CSV(K:M列)から取得
   const playerLeaderboardPromise = (async () => {
     if (!PLAYER_LEADERBOARD_CSV_URL) {
@@ -149,7 +191,7 @@ export async function startLoadingProcess() {
     }
   })();
 
-  await Promise.all([...csvPromises, supabasePromise, playerLeaderboardPromise]);
+  await Promise.all([...csvPromises, supabasePromise, flapPromise, playerLeaderboardPromise]);
 
   // 記録データが揃ったので、プレイヤーリーダーボードの名前にチャンネルURL・国を紐付ける
   window.globalPlayerChannelMap = buildPlayerChannelMap(allCategoryData);
