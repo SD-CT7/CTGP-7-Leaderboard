@@ -9,7 +9,7 @@ import { parseRankingCsv, parsePlayerLeaderboardCsv } from './parser.js';
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
 const totalImages = STATIC_ICONS.length;
-const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1; // +1 Supabase General, +1 Supabase Flap, +1 Player Leaderboard
+const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1 + 1; // +1 Supabase General, +1 Supabase Flap, +1 Supabase Players, +1 Player Leaderboard
 const totalAssets = totalImages + totalCsvs;
 
 function updateProgress() {
@@ -63,6 +63,30 @@ export function buildPlayerCountryMap(allCategoryData) {
     });
   });
   return map;
+}
+
+// players テーブルの行から「名前 → チャンネルURL / 国コード」の辞書を作る。
+// aliases(別名)も同じ値に解決する。aliases は jsonb(配列)でも text(JSON文字列)でも可。
+export function buildMapsFromPlayers(rows) {
+  const channel = {};
+  const country = {};
+  for (const p of rows) {
+    let aliases = p.aliases;
+    if (typeof aliases === 'string') {
+      try { aliases = JSON.parse(aliases); } catch { aliases = []; }
+    }
+    if (!Array.isArray(aliases)) aliases = [];
+
+    const url = String(p.channel_url || '').trim();
+    const cc  = String(p.country || '').trim().toLowerCase();
+
+    for (const n of [p.name, ...aliases]) {
+      if (!n) continue;
+      if (/^https?:\/\//i.test(url)) channel[n] = url;   // http(s) 以外は採用しない
+      if (cc) country[n] = cc;
+    }
+  }
+  return { channel, country };
 }
 
 // allCategoryData / playerLeaderboardData / switchCategory / checkInitialPlayerRoute は
@@ -168,6 +192,29 @@ export async function startLoadingProcess() {
     }
   })();
 
+  // プレイヤー情報(チャンネルURL・国・別名)は Supabase の players テーブルから取得。
+  // discord_handle など公開不要の列は select に含めない。
+  let playersMaps = { channel: {}, country: {} };
+  const playersPromise = (async () => {
+    try {
+      const res = await fetch(
+        SUPABASE_URL + '/rest/v1/players?select=name,country,channel_url,aliases&order=id&limit=5000',
+        {
+          headers: {
+            'apikey': SUPABASE_KEY,
+            'Authorization': 'Bearer ' + SUPABASE_KEY,
+          }
+        }
+      );
+      if (!res.ok) throw new Error('Failed to load players from Supabase');
+      playersMaps = buildMapsFromPlayers(await res.json());
+    } catch (e) {
+      console.warn(e);   // 失敗時は記録行から作る従来の辞書だけで動く
+    } finally {
+      updateProgress();
+    }
+  })();
+
   // プレイヤーリーダーボードは公開CSV(K:M列)から取得
   const playerLeaderboardPromise = (async () => {
     if (!PLAYER_LEADERBOARD_CSV_URL) {
@@ -191,11 +238,12 @@ export async function startLoadingProcess() {
     }
   })();
 
-  await Promise.all([...csvPromises, supabasePromise, flapPromise, playerLeaderboardPromise]);
+  await Promise.all([...csvPromises, supabasePromise, flapPromise, playersPromise, playerLeaderboardPromise]);
 
   // 記録データが揃ったので、プレイヤーリーダーボードの名前にチャンネルURL・国を紐付ける
-  window.globalPlayerChannelMap = buildPlayerChannelMap(allCategoryData);
-  window.globalPlayerCountryMap = buildPlayerCountryMap(allCategoryData);
+  // players テーブルを優先し、載っていない人・空欄は記録行由来の値で補完する
+  window.globalPlayerChannelMap = { ...buildPlayerChannelMap(allCategoryData), ...playersMaps.channel };
+  window.globalPlayerCountryMap = { ...buildPlayerCountryMap(allCategoryData), ...playersMaps.country };
   window.playerLeaderboardData.forEach(p => { p.link = window.globalPlayerChannelMap[p.name] || null; });
 
   window.switchCategory('General');
