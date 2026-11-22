@@ -1,7 +1,47 @@
 // js/data/parser.js
 
+// RFC 4180 準拠の簡易CSVパーサー。
+// ダブルクォートで囲まれたセル内のカンマ・改行・"" (エスケープされた引用符) を正しく扱う。
+// 単純な line.split(',') だと、カンマを含むURL(例: archive.org の googlevideo URL)が
+// 列ズレを起こすため、必ずこちらを使うこと。
+export function parseCsv(text) {
+  const rows = [];
+  let row = [];
+  let cell = '';
+  let inQuotes = false;
+
+  text = String(text).replace(/^\uFEFF/, '');
+
+  for (let i = 0; i < text.length; i++) {
+    const ch = text[i];
+
+    if (inQuotes) {
+      if (ch === '"') {
+        if (text[i + 1] === '"') { cell += '"'; i++; }
+        else inQuotes = false;
+      } else {
+        cell += ch;
+      }
+      continue;
+    }
+
+    if (ch === '"') inQuotes = true;
+    else if (ch === ',') { row.push(cell); cell = ''; }
+    else if (ch === '\n' || ch === '\r') {
+      if (ch === '\r' && text[i + 1] === '\n') i++;
+      row.push(cell); cell = '';
+      rows.push(row); row = [];
+    } else {
+      cell += ch;
+    }
+  }
+
+  if (cell !== '' || row.length > 0) { row.push(cell); rows.push(row); }
+  return rows;
+}
+
 export function parseRankingCsv(csvText) {
-  const lines = csvText.trim().split(/\r?\n/);
+  const rows = parseCsv(csvText);
   let currentTrackKey = null;
   const resultData = {};
 
@@ -19,8 +59,8 @@ export function parseRankingCsv(csvText) {
     return s === '' ? '-' : s;
   };
 
-  for (let i = 1; i < lines.length; i++) {
-    const cells = lines[i].split(',');
+  for (let i = 1; i < rows.length; i++) {
+    const cells = rows[i];
 
     if (cells.length < 2) continue;
 
@@ -66,16 +106,17 @@ export function parseRankingCsv(csvText) {
 }
 
 export function parsePlayerLeaderboardCsv(csvText) {
-  const lines = csvText.trim().split(/\r?\n/);
+  const rows = parseCsv(csvText);
   const result = [];
-  for (let i = 1; i < lines.length; i++) {
-    const cells = lines[i].split(',');
+  for (let i = 1; i < rows.length; i++) {
+    const cells = rows[i];
     if (cells.length < 13) continue;
     const name = cells[10] ? cells[10].trim() : '';
-    const points = cells[11] ? cells[11].trim() : '';
-    const rank = cells[12] ? cells[12].trim() : '';
-    if (name && points !== '' && rank !== '') {
-      result.push({ rank: parseInt(rank, 10), name, points: parseInt(points, 10) });
+    const points = parseInt((cells[11] || '').trim(), 10);
+    const rank = parseInt((cells[12] || '').trim(), 10);
+    // 数値でない行(列ズレ・ゴミ行)は取り込まない
+    if (name && Number.isFinite(points) && Number.isFinite(rank)) {
+      result.push({ rank, name, points });
     }
   }
   return result;
