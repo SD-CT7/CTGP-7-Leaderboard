@@ -3,7 +3,7 @@
 export const NO_VIDEO_ICON = 'img/favicon/novideo.webp';
 
 export function getVideoIcon(url) {
-  if (!url || url === '-') return 'NO_VIDEO_ICON';
+  if (!url || url === '-') return NO_VIDEO_ICON;
   const l = url.toLowerCase();
   if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) return 'img/favicon/youtube.webp';
   if (l.includes('twitter') || l.includes('x.com')) return 'img/favicon/x.webp';
