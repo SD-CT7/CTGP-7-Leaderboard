@@ -1,7 +1,11 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
-import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js'; // isModalVideoIcon をインポート
+import {
+  getVideoIcon,
+  isModalVideoIcon,
+  NO_VIDEO_ICON
+} from '../ui/videoModal.js';
 
 export function getPlayerCourseRows(name, catKey) {
   let key = (catKey === '200cc' || catKey === 'Shroomless') ? 'Default' : catKey;
@@ -41,7 +45,7 @@ export function renderPlayerProfileRecords() {
     row.style.animationDelay = `${Math.min(i + 1, 25) * 0.02}s`;
 
     let rankContent = hasRecord ? (r.rank <= 8 ? `<img src="${getRankImageSrc(r.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${r.rank}'">` : `${r.rank}`) : '-';
-    let iconHtml = `<img src="Novideo.webp">`;
+    let iconHtml = `<img src="${NO_VIDEO_ICON}">`;
     let timeHtml = hasRecord ? r.time : '-';
 
     if (hasRecord && r.video && r.video !== '-') {
@@ -50,7 +54,7 @@ export function renderPlayerProfileRecords() {
       const safeHref = escapeAttr(String(r.video));
       timeHtml = `<a href="${safeHref}" target="_blank" rel="noopener" class="time-link">${r.time}</a>`;
       iconHtml = isModalTarget 
-        ? `<div class="video-icon" data-video-url="${safeHref}" style="cursor:pointer"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></div>`
+        ? `<div class="video-icon" data-video-url="${safeHref}" style="cursor:pointer"><img src="${iconSrc}" onerror="this.src='${NO_VIDEO_ICON}'"></div>`
         : `<a href="${safeHref}" target="_blank" rel="noopener"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></a>`;
     }
 
