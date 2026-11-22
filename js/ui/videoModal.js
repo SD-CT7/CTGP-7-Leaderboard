@@ -1,5 +1,7 @@
 // js/ui/videoModal.js
 
+export const NO_VIDEO_ICON = 'img/favicon/novideo.webp';
+
 export function getVideoIcon(url) {
   if (!url || url === '-') return 'img/favicon/novideo.webp';
   const l = url.toLowerCase();
