@@ -59,7 +59,7 @@ function showCountryList(region) {
 
   REGION_DATA[region].forEach(c => {
     const isSelected = state.countryFilter.type === 'country' && state.countryFilter.value === c.code;
-    const flagSrc = c.code === 'scotland' ? 'Scotland.webp' : `${FLAG_BASE_URL}${c.code}.svg`;
+    const flagSrc = c.code === 'scotland' ? 'img/flag/scotland.webp' : `${FLAG_BASE_URL}${c.code}.svg`;
     const item = document.createElement('div');
     item.className = 'cf-item' + (isSelected ? ' selected' : '');
     item.innerHTML = `<img src="${flagSrc}" onerror="this.style.visibility='hidden'">${c.name}`;
