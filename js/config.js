@@ -45,7 +45,6 @@ for (let rank = 1; rank <= 8; rank++) {
   STATIC_ICONS.push(`${RANK_IMG_BASE}${rank}${suffix}${RANK_EXT}`);
 }
 
-export const LOCAL_CSV_PATH = "./times.csv";
 export const COURSES_PER_CUP = 4;
 export const SCALE_FACTOR = 2.5;
 export const SIDEBAR_WIDTH = 120;

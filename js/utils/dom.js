@@ -1,7 +1,9 @@
+import { RANK_EXT, RANK_IMG_BASE } from '../config.js';
+
 export function escapeAttr(s) {
   return String(s)
     .replace(/&/g, "&amp;")
-    .replace(/"/g, "&quot;")
+    .replace(/\"/g, "&quot;")
     .replace(/</g, "&lt;")
     .replace(/>/g, "&gt;");
 }
@@ -16,11 +18,11 @@ export function getRankImageSrc(rank) {
   rank = Number(rank);
 
   if (!Number.isInteger(rank) || rank < 1) {
-    return "img/rank/1st.webp";
+    rank = 1;
   }
 
   const suffix = RANK_SUFFIX[rank] || "th";
-  return `img/rank/${rank}${suffix}.webp`;
+  return `${RANK_IMG_BASE}${rank}${suffix}${RANK_EXT}`;
 }
 
 export function normalizeTrackFileName(file) {

@@ -2,7 +2,6 @@ import { FALLBACK_PLAYER_DATA } from './data/playerFallback.js';
 
 export const state = {
   allCategoryData: {},
-  currentSheetUrl: '',
   globalRankingData: {},
   currentTire: 'without',
   isGlitch: false,

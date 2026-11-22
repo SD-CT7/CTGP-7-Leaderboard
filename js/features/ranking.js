@@ -1,10 +1,9 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
-import { escapeAttr } from '../utils/dom.js';
+import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
 import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
-import { getRankImageSrc } from '../utils/dom.js';
 
 export function switchCategory(cat) {
   let key = (cat === '200cc' || cat === 'Shroomless') ? 'Default' : cat;

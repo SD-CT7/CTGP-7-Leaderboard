@@ -2,6 +2,7 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { COURSES_PER_CUP, ICON_BASE_PATH, SCALE_FACTOR, SIDEBAR_WIDTH } from '../config.js';
+import { getTrackImageSrc } from '../utils/dom.js';
 import { showRankingScreen } from './ranking.js';
 
 export function expandCard(card) {
@@ -61,7 +62,7 @@ export function initCupCards() {
             showRankingScreen(c); 
           } 
         };
-        w.innerHTML = `<img src="img/trackImage/${c.file}.webp" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+        w.innerHTML = `<img src="${getTrackImageSrc(c.file)}" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
         grid.appendChild(w);
       });
       
