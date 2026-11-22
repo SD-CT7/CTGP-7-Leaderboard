@@ -57,7 +57,7 @@ export const REGION_DATA = {
     { code: "sv", name: "El Salvador" }, { code: "ni", name: "Nicaragua" }, { code: "cr", name: "Costa Rica" },
     { code: "pa", name: "Panama" }, { code: "cu", name: "Cuba" }, { code: "jm", name: "Jamaica" },
     { code: "ht", name: "Haiti" }, { code: "do", name: "Dominican Republic" }, { code: "bs", name: "Bahamas" },
-    { code: "tt", name: "Trinidad and Tobago" }, { code: "bb", name: "Barbados" }, { code: "pr", name: "Puerto Rico" },
+    { code: "tt", name: "Trinidad and Tobago" }, { code: "bb", name: "Barbados" },
   ],
   "South America": [
     { code: "br", name: "Brazil" }, { code: "ar", name: "Argentina" }, { code: "cl", name: "Chile" },
