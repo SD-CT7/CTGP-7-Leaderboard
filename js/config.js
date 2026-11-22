@@ -4,7 +4,7 @@ export const SUPABASE_KEY = 'sb_publishable_CxryfeGj45IL6opyJJlEAg_s985qwS9';
 
 export const CSV_URLS = {
   Default: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=2103674373&single=true&output=csv",
-  Flap: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1016759313&single=true&output=csv",
+  // Flap は Supabase(flap_leaderboard ビュー)から取得するため CSV 対象外
   Mission: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1676868794&single=true&output=csv"
 };
 
