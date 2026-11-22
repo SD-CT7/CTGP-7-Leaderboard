@@ -3,7 +3,7 @@ import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
 import { escapeAttr } from '../utils/dom.js';
 import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
-import { getVideoIcon, isModalVideoIcon } from '../ui/videoModal.js';
+import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
 
 export function switchCategory(cat) {
@@ -95,7 +95,10 @@ export function renderRankingList() {
     row.style.animationDelay = `${(i+1)*0.04}s`;
 
     const iconSrc = getVideoIcon(d.video);
-    const hasVid = (d.video !== '-' && d.video !== '' && iconSrc !== 'Novideo.webp');
+   
+    const hasVid = d.video !== '-' &&
+               d.video !== '' &&
+               iconSrc !== NO_VIDEO_ICON;
 
     let flagHtml = '';
     if (d.country && d.country !== '-') {
@@ -116,7 +119,7 @@ export function renderRankingList() {
       ? (isModalTarget
         ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`
         : `<a href="${escapeAttr(d.video)}" target="_blank"><img src="${iconSrc}"></a>`)
-      : `<div class="no-link"><img src="Novideo.webp"></div>`;
+      : `<div class="no-link"><img src="${NO_VIDEO_ICON}"></div>`;
     row.innerHTML = `<div class="section col-rank">${rankContent}</div><div class="section col-name">${nameHtml}</div><div class="section col-time">${timeHtml}</div><div class="section col-icon">${iconHtml}</div><div class="section col-flag">${flagHtml}</div>`;
     listEl.appendChild(row);
   }
