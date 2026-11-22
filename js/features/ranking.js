@@ -1,9 +1,10 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
-import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
+import { escapeAttr } from '../utils/dom.js';
 import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
+import { getRankImageSrc } from '../utils/dom.js';
 
 export function switchCategory(cat) {
   let key = (cat === '200cc' || cat === 'Shroomless') ? 'Default' : cat;
@@ -81,7 +82,9 @@ export function renderRankingList() {
   if (state.isGlitch) key += "_G";
 
   let data = state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : [];
-  data = data.filter(d => countryMatchesFilter(d.country));
+  // 国は players テーブル由来の辞書を優先し、無ければ記録行の値を使う
+  const countryOf = (d) => state.globalPlayerCountryMap[d.name] || d.country;
+  data = data.filter(d => countryMatchesFilter(countryOf(d)));
 
   const displayCount = state.isReadMoreExpanded ? data.length : 8;
 
@@ -100,8 +103,9 @@ export function renderRankingList() {
                iconSrc !== NO_VIDEO_ICON;
 
     let flagHtml = '';
-    if (d.country && d.country !== '-') {
-      const countryCode = d.country.toLowerCase();
+    const dCountry = countryOf(d);
+    if (dCountry && dCountry !== '-') {
+      const countryCode = dCountry.toLowerCase();
       flagHtml = `<img src="${countryCode === 'scotland' ? 'img/flag/scotland.webp' : `${FLAG_BASE_URL}${countryCode}.svg`}" onerror="this.style.visibility='hidden'">`;
     }
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
