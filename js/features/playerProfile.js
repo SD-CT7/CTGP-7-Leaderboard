@@ -55,7 +55,7 @@ export function renderPlayerProfileRecords() {
       timeHtml = `<a href="${safeHref}" target="_blank" rel="noopener" class="time-link">${r.time}</a>`;
       iconHtml = isModalTarget 
         ? `<div class="video-icon" data-video-url="${safeHref}" style="cursor:pointer"><img src="${iconSrc}" onerror="this.src='${NO_VIDEO_ICON}'"></div>`
-        : `<a href="${safeHref}" target="_blank" rel="noopener"><img src="${iconSrc}" onerror="this.src='Novideo.webp'"></a>`;
+        : `<a href="${safeHref}" target="_blank" rel="noopener"><img src="${iconSrc}" onerror="this.src='img/favicon/novideo.webp'"></a>`;
     }
 
     row.innerHTML = `<div class="rr-rank">${rankContent}</div><div class="rr-track course-jump">${r.trackName}</div><div class="rr-time">${timeHtml}</div><div class="rr-icon">${iconHtml}</div>`;
