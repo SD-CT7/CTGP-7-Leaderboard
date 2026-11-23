@@ -15,8 +15,9 @@ export const RANK_IMG_BASE = "img/rank/";
 export const RANK_EXT = ".webp";
 export const ICON_BASE_PATH = "img/cupImage/";
 
-export const TIRE_NORMAL = "img/kart/tire/normal.webp";
-export const TIRE_REDMONSTER = "img/kart/tire/redmonster.webp";
+// タイヤ切替機能の一時無効化に伴い、画像の参照を外している
+// export const TIRE_NORMAL = "img/kart/tire/normal.webp";
+// export const TIRE_REDMONSTER = "img/kart/tire/redmonster.webp";
 
 export const STATIC_ICONS = [
   "img/earth.webp",
@@ -31,9 +32,7 @@ export const STATIC_ICONS = [
   "img/category/200cc.webp",
   "img/category/shroomless.webp",
   "img/category/mission.webp",
-  "img/category/flap.webp",
-  TIRE_NORMAL,
-  TIRE_REDMONSTER
+  "img/category/flap.webp"
 ];
 
 for (let rank = 1; rank <= 8; rank++) {
