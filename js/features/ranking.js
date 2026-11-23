@@ -42,11 +42,12 @@ export function goBackToCups() {
   if (state.activeCard) document.body.classList.add('mode-expanded');
 }
 
-export function toggleMode() {
-  state.currentTire = (state.currentTire === 'without') ? 'dekatire' : 'without';
-  updateToggleUI();
-  renderRankingList();
-}
+// タイヤ切替機能は一時無効化中(復活時はコメントを外す)
+// export function toggleMode() {
+//   state.currentTire = (state.currentTire === 'without') ? 'dekatire' : 'without';
+//   updateToggleUI();
+//   renderRankingList();
+// }
 
 export function toggleGlitchMode() {
   state.isGlitch = !state.isGlitch;
@@ -60,16 +61,9 @@ export function toggleReadMore() {
 }
 
 function updateToggleUI() {
-  const optWithout = document.getElementById('opt-without');
-  const optDekatire = document.getElementById('opt-dekatire');
   const btnGlitch = document.getElementById('glitch-btn');
 
-  optWithout.classList.remove('selected');
-  optDekatire.classList.remove('selected');
   btnGlitch.classList.remove('active');
-
-  if (state.currentTire === 'without') optWithout.classList.add('selected');
-  else optDekatire.classList.add('selected');
 
   if (state.isGlitch) btnGlitch.classList.add('active');
 }
@@ -138,7 +132,7 @@ export function renderRankingList() {
 
 export function initRankingEvents() {
   document.querySelector('#ranking-screen .back-btn').addEventListener('click', goBackToCups);
-  document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
+  // document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
   document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
   document.querySelector('#ranking-screen .earth-btn').addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-country-filter')));
   document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => document.getElementById('mobile-category-overlay').classList.add('visible'));
