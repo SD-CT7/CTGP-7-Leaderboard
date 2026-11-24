@@ -1,6 +1,8 @@
 import { FALLBACK_PLAYER_DATA } from './data/playerFallback.js';
 
 export const state = {
+  tracks: [],
+  glitchCourseKeys: new Set(),
   allCategoryData: {},
   globalRankingData: {},
   currentTire: 'without',
