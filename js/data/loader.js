@@ -134,7 +134,7 @@ export async function startLoadingProcess() {
           time: row.time || '-',
           video: row.video || '-',
           channel: '-',
-          country: row.country || '-',
+          country: '-',
         });
       }
       allCategoryData['General'] = generalData;
@@ -239,11 +239,12 @@ export async function startLoadingProcess() {
     playerLeaderboardPromise
   ]);
 
-  // General のチャンネルURLは times ではなく players の情報を使う
+  // General のチャンネルURLと国コードは times ではなく players の情報を使う
   Object.values(allCategoryData['General'] || {}).forEach(track => {
     ['without', 'dekatire'].forEach(mode => {
       (track[mode] || []).forEach(entry => {
         entry.channel = playersMaps.channel[entry.name] || '-';
+        entry.country = playersMaps.country[entry.name] || '-';
       });
     });
   });
