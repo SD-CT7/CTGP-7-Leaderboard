@@ -1,5 +1,4 @@
 import { state } from '../state.js';
-import { RAW_CSV_DATA } from '../data/courses.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
 import {
   getVideoIcon,
@@ -11,7 +10,7 @@ export function getPlayerCourseRows(name, catKey) {
   let key = (catKey === '200cc' || catKey === 'Shroomless') ? 'Default' : catKey;
   const categoryData = state.allCategoryData[key] || {};
 
-  return RAW_CSV_DATA.map(course => {
+  return state.tracks.map(course => {
     const trackKey = course.file.substring(4);
     const trackData = categoryData[trackKey];
     const entry = trackData ? (trackData.without || []).find(e => e.name === name) : null;
