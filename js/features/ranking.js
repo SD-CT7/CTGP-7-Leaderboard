@@ -1,5 +1,4 @@
 import { state } from '../state.js';
-import { RAW_CSV_DATA, GLITCH_COURSES } from '../data/courses.js';
 import { escapeAttr } from '../utils/dom.js';
 import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
@@ -22,15 +21,15 @@ export function showRankingScreen(c) {
   state.isGlitch = false;
   state.isReadMoreExpanded = false;
   updateToggleUI();
-
   document.body.classList.remove('mode-expanded');
   document.getElementById('cup-select-screen').classList.add('hidden');
   document.getElementById('ranking-screen').classList.remove('hidden');
   document.getElementById('ranking-course-title').innerText = c.name;
-
   const glitchBtn = document.getElementById('glitch-btn');
-  glitchBtn.classList.toggle('hidden', !GLITCH_COURSES.includes(c.name));
-
+  glitchBtn.classList.toggle(
+    'hidden',
+    !state.glitchCourseKeys.has(String(c.key).toLowerCase())
+  );
   renderRankingList();
   window.scrollTo(0, 0);
 }
@@ -41,13 +40,6 @@ export function goBackToCups() {
   state.currentSelectedCourse = null;
   if (state.activeCard) document.body.classList.add('mode-expanded');
 }
-
-// タイヤ切替機能は一時無効化中(復活時はコメントを外す)
-// export function toggleMode() {
-//   state.currentTire = (state.currentTire === 'without') ? 'dekatire' : 'without';
-//   updateToggleUI();
-//   renderRankingList();
-// }
 
 export function toggleGlitchMode() {
   state.isGlitch = !state.isGlitch;
@@ -62,40 +54,28 @@ export function toggleReadMore() {
 
 function updateToggleUI() {
   const btnGlitch = document.getElementById('glitch-btn');
-
   btnGlitch.classList.remove('active');
-
   if (state.isGlitch) btnGlitch.classList.add('active');
 }
 
 export function renderRankingList() {
   const listEl = document.getElementById('rankingList');
   listEl.innerHTML = '';
-
   let key = state.currentSelectedCourse.file.substring(4);
   if (state.isGlitch) key += "_G";
-
   let data = state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : [];
-  // 国は players テーブル由来の辞書を優先し、無ければ記録行の値を使う
   const countryOf = (d) => state.globalPlayerCountryMap[d.name] || d.country;
   data = data.filter(d => countryMatchesFilter(countryOf(d)));
-
   const displayCount = state.isReadMoreExpanded ? data.length : 8;
 
   for (let i = 0; i < displayCount; i++) {
     const d = data[i] || (i < 8 ? { rank: i+1, name: "---", time: "--:--", video: "-", country: "-" } : null);
     if (!d) continue;
-
     const row = document.createElement('div');
     row.className = `rank-row ${d.rank === 1 ? 'rank-1st' : ''} animate-slide-in`;
     row.style.animationDelay = `${(i+1)*0.04}s`;
-
     const iconSrc = getVideoIcon(d.video);
-   
-    const hasVid = d.video !== '-' &&
-               d.video !== '' &&
-               iconSrc !== NO_VIDEO_ICON;
-
+    const hasVid = d.video !== '-' && d.video !== '' && iconSrc !== NO_VIDEO_ICON;
     let flagHtml = '';
     const dCountry = countryOf(d);
     if (dCountry && dCountry !== '-') {
@@ -104,14 +84,8 @@ export function renderRankingList() {
     }
     const nameHtml = d.name !== '---' ? `<a href="/player/${encodeURIComponent(d.name)}" class="name-link" data-player="${escapeAttr(d.name)}">${d.name}</a>` : d.name;
     const timeHtml = hasVid ? `<a href="${escapeAttr(d.video)}" target="_blank" class="time-link">${d.time}</a>` : d.time;
-    let rankContent;
-    if (d.rank <= 8) {
-      rankContent = `<img src="${getRankImageSrc(d.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">`;
-    } else {
-      rankContent = `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
-    }
+    let rankContent = d.rank <= 8 ? `<img src="${getRankImageSrc(d.rank)}" onerror="this.style.display='none';this.parentElement.innerText='${d.rank}'">` : `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
     const isModalTarget = isModalVideoIcon(iconSrc);
-
     const iconHtml = hasVid
       ? (isModalTarget
         ? `<div class="video-icon" data-video-url="${escapeAttr(d.video)}" style="cursor:pointer"><img src="${iconSrc}"></div>`
@@ -132,16 +106,13 @@ export function renderRankingList() {
 
 export function initRankingEvents() {
   document.querySelector('#ranking-screen .back-btn').addEventListener('click', goBackToCups);
-  // document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
   document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
   document.querySelector('#ranking-screen .earth-btn').addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-country-filter')));
   document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => document.getElementById('mobile-category-overlay').classList.add('visible'));
-
   document.querySelector('.capsule').addEventListener('click', (e) => {
     const item = e.target.closest('.capsule-item[data-cat]');
     if (item) switchCategory(item.dataset.cat);
   });
-
   const mobileCatOverlay = document.getElementById('mobile-category-overlay');
   mobileCatOverlay.addEventListener('click', () => mobileCatOverlay.classList.remove('visible'));
   mobileCatOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());

@@ -33,15 +33,13 @@ function initGlobalEvents() {
     else resetCard();
   });
 
-  // 動的イベント委譲: ランキング一覧
   document.getElementById('rankingList').addEventListener('click', (e) => {
     const nameLink = e.target.closest('.name-link[data-player]');
-    if (nameLink) { e.preventDefault(); openPlayerProfile(nameLink.dataset.player, nameLink); return; }
+    if (nameLink) { e.preventEvent(); openPlayerProfile(nameLink.dataset.player, nameLink); return; }
     const videoIcon = e.target.closest('.video-icon[data-video-url]');
     if (videoIcon) { openVideoModal(videoIcon.dataset.videoUrl); return; }
   });
 
-  // 動的イベント委譲: プレイヤーリーダーボード
   document.getElementById('playerRankingList').addEventListener('click', (e) => {
     const nameLink = e.target.closest('.name-link[data-player]');
     if (nameLink) { e.preventDefault(); openPlayerProfile(nameLink.dataset.player, nameLink); return; }
@@ -52,7 +50,6 @@ function initGlobalEvents() {
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
-  initCupCards();
   initFilterEvents();
   initLeaderboardEvents();
   initPlayerProfileEvents();
@@ -61,5 +58,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalEvents();
   
   preloadStaticIcons();
-  startLoadingProcess();
+  startLoadingProcess().then(() => {
+    initCupCards(state.tracks);
+  });
 });
