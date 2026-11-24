@@ -112,7 +112,7 @@ export async function startLoadingProcess() {
   const supabasePromise = (async () => {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/times?category=eq.General&order=track_name,rank&limit=5000',
+        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video&category=eq.General&order=track_name,rank&limit=5000',
         {
           headers: {
             'apikey': SUPABASE_KEY,
@@ -133,7 +133,7 @@ export async function startLoadingProcess() {
           name: row.player,
           time: row.time || '-',
           video: row.video || '-',
-          channel: row.channel || '-',
+          channel: '-',
           country: row.country || '-',
         });
       }
@@ -238,6 +238,15 @@ export async function startLoadingProcess() {
     playersPromise,
     playerLeaderboardPromise
   ]);
+
+  // General のチャンネルURLは times ではなく players の情報を使う
+  Object.values(allCategoryData['General'] || {}).forEach(track => {
+    ['without', 'dekatire'].forEach(mode => {
+      (track[mode] || []).forEach(entry => {
+        entry.channel = playersMaps.channel[entry.name] || '-';
+      });
+    });
+  });
 
   // 記録データをプレイヤー情報で補完
   window.globalPlayerChannelMap = {
