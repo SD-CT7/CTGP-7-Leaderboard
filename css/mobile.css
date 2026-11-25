@@ -177,4 +177,8 @@
     }
     .rr-icon { grid-column: 3; grid-row: 1 / 3; border-left: none !important; justify-content: center; height: 100%; }
     .pp-tab { font-size: 0.75rem; padding: 5px 10px; }
+        /* Credits・Other links：スマホでは1列表示 */
+    .info-grid {
+      grid-template-columns: 1fr;
+    }
   }
