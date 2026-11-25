@@ -83,12 +83,13 @@ export function setProfileSortMode(mode) {
 }
 
 export function openPlayerProfile(name, originEl, pushState = true) {
-  if (state.leaderboardActive) {
-    const panel = document.getElementById('leaderboard-panel');
-    panel.classList.remove('active-panel', 'hidden');
-    panel.style.cssText = '';
-    state.leaderboardActive = false;
-  }
+if (state.leaderboardActive) {
+  const panel = document.getElementById('leaderboard-panel');
+  panel.classList.remove('active-panel');
+  panel.classList.add('hidden');
+  panel.style.cssText = '';
+  state.leaderboardActive = false;
+}
 
   state.currentProfileName = name;
   state.currentProfileCategory = 'General';
