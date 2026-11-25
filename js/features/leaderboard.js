@@ -64,6 +64,5 @@ export function closeLeaderboard() {
 
 export function initLeaderboardEvents() {
   document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
-  document.querySelector('#leaderboard-panel .panel-close-btn').addEventListener('click', closeLeaderboard);
   document.querySelector('#leaderboard-panel .earth-btn').addEventListener('click', openCountryFilterMenu);
 }
