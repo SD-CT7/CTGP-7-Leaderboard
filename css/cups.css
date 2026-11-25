@@ -176,3 +176,9 @@ body.mode-expanded .info-container {
   height: 24px;
   object-fit: contain;
 }
+
+.info-name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
