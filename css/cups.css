@@ -140,19 +140,22 @@ body.mode-expanded .info-container {
 
 .info-grid {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 15px 20px;
+  align-items: start;
 }
 
 .info-item {
   display: flex;
-  align-items: center;
+  align-items: flex-start;
   gap: 10px;
+  min-width: 0;
   cursor: pointer;
   transition: opacity 0.2s;
   text-decoration: none;
   color: white;
 }
+
 .info-item:hover {
   opacity: 0.7;
 }
@@ -162,6 +165,11 @@ body.mode-expanded .info-container {
   flex-direction: column;
   gap: 4px;
   min-width: 0;
+}
+
+.info-details {
+  min-width: 0;
+  overflow-wrap: anywhere;
 }
 
 .info-details small {
