@@ -1,0 +1,84 @@
+--- a/index.html
++++ b/index.html
+@@ -79,13 +79,19 @@
+     <div class="info-container">
+       <fieldset>
+         <legend>Credits</legend>
+-        <div class="info-content info-credits-list">
++        <div class="info-content info-grid">
+           <a href="https://www.youtube.com/@sddazo-ctgp-7" target="_blank" rel="noopener noreferrer" class="info-item">
+-            <span>@SD</span>
++            <div class="info-details">
++              <span>@SD</span>
++              <small> [Add a short description here] </small>
++            </div>
+             <img src="img/favicon/youtube.webp" alt="" class="info-icon">
+           </a>
+           <a href="https://www.youtube.com/@Pierre__" target="_blank" rel="noopener noreferrer" class="info-item">
+-            <span>@Pierre</span>
++            <div class="info-details">
++              <span>@Pierre</span>
++              <small> [Add a short description here] </small>
++            </div>
+             <img src="img/favicon/youtube.webp" alt="" class="info-icon">
+           </a>
+         </div>
+@@ -96,19 +102,31 @@
+         <div class="info-content info-grid">
+           <a href="https://docs.google.com/spreadsheets/d/1I8z7cbKY2tpw2BvKi1hA3KPifSOOlkR6ji3NvbdE1a0" target="_blank" rel="noopener noreferrer" class="info-item">
+             <img src="img/favicon/excel.webp" alt="" class="info-icon">
+-            <span>Top5s</span>
++            <div class="info-details">
++              <span>Top5s</span>
++              <small>[Add a short description here]</small>
++            </div>
+           </a>
+           <a href="https://docs.google.com/spreadsheets/d/1aqhIBbpPZBoziX9KXVK7c4JL9Zir7OLp0uWcgjoFn90" target="_blank" rel="noopener noreferrer" class="info-item">
+             <img src="img/favicon/excel.webp" alt="" class="info-icon">
+-            <span>Chart</span>
++            <div class="info-details">
++              <span>Chart</span>
++              <small>[Add a short description here]</small>
++            </div>
+           </a>
+           <a href="https://docs.google.com/spreadsheets/d/1t-iFEK_NHvX9LVMvH1_hjLXI_47ti9H-4awDXuEpUm8" target="_blank" rel="noopener noreferrer" class="info-item">
+             <img src="img/favicon/excel.webp" alt="" class="info-icon">
+-            <span>Players</span>
++            <div class="info-details">
++              <span>Players</span>
++              <small>[Add a short description here]</small>
++            </div>
+           </a>
+           <a href="https://discord.gg/MExtXDS43u" target="_blank" rel="noopener noreferrer" class="info-item">
+             <img src="img/favicon/discord.webp" alt="" class="info-icon">
+-            <span>Discord</span>
++            <div class="info-details">
++              <span>Discord</span>
++              <small>[Add a short description here]</small>
++            </div>
+           </a>
+         </div>
+       </fieldset>
+--- a/cups.css
++++ b/cups.css
+@@ -157,6 +157,20 @@
+   opacity: 0.7;
+ }
+ 
++.info-details {
++  display: flex;
++  flex-direction: column;
++  gap: 4px;
++  min-width: 0;
++}
++
++.info-details small {
++  font-size: 14px;
++  font-weight: normal;
++  line-height: 1.3;
++  opacity: 0.7;
++}
++
+ .info-icon {
+   width: 24px;
+   height: 24px;
