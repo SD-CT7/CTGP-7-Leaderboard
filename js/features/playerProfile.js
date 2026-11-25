@@ -97,7 +97,7 @@ if (state.leaderboardActive) {
   
   const channelUrl = state.globalPlayerChannelMap[name];
   const ppNameEl = document.getElementById('pp-name');
-  ppNameEl.innerHTML = channelUrl ? `<a href="${channelUrl.replace(/"/g, '&quot;')}" target="_blank" rel="noopener" class="name-link">${name}</a>` : name;
+  ppNameEl.innerHTML = channelUrl ? `<a href="${channelUrl.replace(/\"/g, '&quot;')}" target="_blank" rel="noopener" class="name-link">${name}</a>` : name;
   
   document.querySelectorAll('.pp-tab').forEach(t => t.classList.toggle('selected', t.dataset.cat === 'General'));
   document.querySelectorAll('.sort-toggle-option').forEach(el => el.classList.toggle('selected', el.dataset.sort === 'course'));
@@ -165,7 +165,6 @@ export function initPlayerProfileEvents() {
     }
   });
 
-  document.querySelector('#player-profile-panel .panel-close-btn').addEventListener('click', () => closePlayerProfile());
   document.querySelector('#player-profile-panel .pp-mobile-btn').addEventListener('click', () => document.getElementById('profile-mobile-category-overlay').classList.add('visible'));
   
   const profileMobileOverlay = document.getElementById('profile-mobile-category-overlay');
