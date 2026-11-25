@@ -59,8 +59,8 @@
            </a>
          </div>
        </fieldset>
---- a/cups.css
-+++ b/cups.css
+--- a/css/cups.css
++++ b/css/cups.css
 @@ -157,6 +157,20 @@
    opacity: 0.7;
  }
