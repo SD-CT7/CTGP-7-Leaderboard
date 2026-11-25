@@ -189,4 +189,5 @@ body.mode-expanded .info-container {
   display: flex;
   align-items: center;
   gap: 8px;
+  font-size: 20px;
 }
