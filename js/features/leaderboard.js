@@ -1,7 +1,6 @@
 import { state } from '../state.js';
 import { countryMatchesFilter, openCountryFilterMenu } from './filter.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
-import { getCategoryDataKey } from '../data/categories.js';
 import { calculatePlayerPoints } from './points.js';
 import { openCategoryPicker } from '../ui/categoryPicker.js';
 
@@ -9,7 +8,7 @@ export function renderPlayerLeaderboard() {
   const listEl = document.getElementById('playerRankingList');
   listEl.innerHTML = '';
   // ポイントはカテゴリ内の全コースの順位から計算する(順位は国フィルター適用前の全体順位)
-  const players = calculatePlayerPoints(state.allCategoryData[getCategoryDataKey(state.leaderboardCategory)]);
+  const players = calculatePlayerPoints(state.allCategoryData[state.leaderboardCategory]);
   const filteredData = players.filter(p => countryMatchesFilter(state.globalPlayerCountryMap[p.name]));
 
   if (filteredData.length === 0) {
