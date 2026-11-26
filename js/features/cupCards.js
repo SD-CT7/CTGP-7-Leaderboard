@@ -2,10 +2,85 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { COURSES_PER_CUP, ICON_BASE_PATH, SCALE_FACTOR, SIDEBAR_WIDTH } from '../config.js';
-import { getTrackImageSrc } from '../utils/dom.js';
+import { getTrackImageSrc, getTrackThumbSrc } from '../utils/dom.js';
 import { showRankingScreen } from './ranking.js';
 
+// ===== 画像の読み込み =====
+// カード内の <img> は最初は src を持たず、data-src(小サイズ) / data-full(展開用) だけを持つ。
+//  1. ローディング中 : 画面内に見えているカードの画像だけ読み込み、デコードまで待つ
+//                      (ローディング画面が消えた瞬間に表示済みになる)
+//  2. ローディング後 : 残りのカードの画像を読み込む
+//  3. カード展開時   : 展開用の画像に差し替える (ホバー/タッチ開始時に先読み)
+
+const IMAGE_TIMEOUT_MS = 5000; // 画像1枚あたりの待ち上限 (超えたら待たずに先へ進む)
+
+function whenReady(img) {
+  // decode() は取得+デコードの完了まで待てる。非対応環境では load イベントで代用。
+  if (typeof img.decode === 'function') return img.decode();
+  return new Promise((resolve, reject) => {
+    img.onload = resolve;
+    img.onerror = reject;
+  });
+}
+
+// 絶対にreject しない。完了・失敗・タイムアウトのいずれかで resolve する。
+export function loadCupImage(img) {
+  if (img.dataset.state) return Promise.resolve();   // 開始済み
+  img.dataset.state = 'loading';
+
+  const tryLoad = async (src) => {
+    img.src = src;
+    await whenReady(img);
+  };
+
+  const job = (async () => {
+    try {
+      await tryLoad(img.dataset.src);
+    } catch {
+      // 小サイズ画像が無い場合は展開用の画像で代用する
+      if (img.dataset.full && img.dataset.full !== img.dataset.src) {
+        try { await tryLoad(img.dataset.full); return; } catch { /* 下で非表示 */ }
+      }
+      img.style.display = 'none';
+    }
+  })();
+
+  const timeout = new Promise((resolve) => setTimeout(resolve, IMAGE_TIMEOUT_MS));
+  return Promise.race([job, timeout]).then(() => { img.dataset.state = 'done'; });
+}
+
+// 初期表示(スクロールなし)で見えているカードの画像
+export function getInitialCupImages() {
+  const limit = window.innerHeight + 100;
+  const imgs = [];
+  document.querySelectorAll('#cupsContainer .cup-card').forEach((card) => {
+    if (card.getBoundingClientRect().top < limit) {
+      imgs.push(...card.querySelectorAll('img[data-src]'));
+    }
+  });
+  return imgs;
+}
+
+// ローディング後に、まだ読み込んでいない画像をすべて読み込む
+export function loadRemainingCupImages() {
+  document.querySelectorAll('#cupsContainer img[data-src]').forEach((img) => {
+    if (!img.dataset.state) loadCupImage(img);
+  });
+}
+
+// カード内の画像を展開用サイズに差し替える (読み込み+デコード完了後に差し替えるのでちらつかない)
+function upgradeCardImages(card) {
+  card.querySelectorAll('img[data-full]').forEach((img) => {
+    if (img.dataset.upgraded) return;
+    img.dataset.upgraded = '1';
+    const big = new Image();
+    big.src = img.dataset.full;
+    whenReady(big).then(() => { img.src = big.src; }).catch(() => {});
+  });
+}
+
 export function expandCard(card) {
+  upgradeCardImages(card);
   const rect = card.getBoundingClientRect();
   state.cardRects.set(card.id, rect);
   
@@ -62,14 +137,28 @@ export function initCupCards() {
             showRankingScreen(c); 
           } 
         };
-        w.innerHTML = `<img src="${getTrackImageSrc(c.file)}" loading="lazy" decoding="async" onerror="this.style.display='none'">`;
+        const img = document.createElement('img');
+        img.decoding = 'async';
+        img.alt = '';
+        img.dataset.src = getTrackThumbSrc(c.file);
+        img.dataset.full = getTrackImageSrc(c.file);
+        w.appendChild(img);
         grid.appendChild(w);
       });
       
       const icon = document.createElement('div');
       icon.className = 'cup-icon-wrapper';
-      icon.innerHTML = `<img src="${ICON_BASE_PATH}${cupIdx + 9}.webp" loading="lazy" decoding="async">`;
+      const iconImg = document.createElement('img');
+      iconImg.decoding = 'async';
+      iconImg.alt = '';
+      iconImg.dataset.src = `${ICON_BASE_PATH}${cupIdx + 9}.webp`;
+      icon.appendChild(iconImg);
       card.append(grid, icon);
+
+      // マウスを乗せた/触れた時点で展開用画像を先読みする
+      const prefetch = () => upgradeCardImages(card);
+      card.addEventListener('pointerenter', prefetch, { once: true });
+      card.addEventListener('touchstart', prefetch, { once: true, passive: true });
       container.appendChild(card);
     }
   });
