@@ -23,10 +23,16 @@
 .mobile-category-btn:hover { transform: scale(1.08); }
 .mobile-category-btn:active { transform: scale(0.95); }
 .mobile-category-btn img {
-  width: 120%;
-  height: 120%;
+  width: 80%;
+  height: 80%;
   object-fit: contain;
+  justify-self: center;
+  align-self: center;
   grid-area: 1 / 1 / -1 / -1;
+}
+
+.mobile-category-btn img {
+  transform-origin: center center;
 }
 
 /* カテゴリ選択オーバーレイ */
