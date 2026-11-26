@@ -1,6 +1,6 @@
 /* ===== カテゴリ選択UI(PC・スマホ共通) ===== */
 
-/* カテゴリボタン(2x2グリッド+虫眼鏡) */
+/* カテゴリボタン */
 .mobile-category-btn {
   display: grid;
   width: 45px;
@@ -22,30 +22,11 @@
 }
 .mobile-category-btn:hover { transform: scale(1.08); }
 .mobile-category-btn:active { transform: scale(0.95); }
-
-.uu-box {
-  border: 3px solid #fff;
-  border-radius: 3px;
-}
-
-.uu-magnifier-circle {
-  width: 45%; height: 45%;
-  border: 3px solid #fff;
-  border-radius: 50%;
-  position: absolute;
-  top: 10%; left: 5%;
-}
-.uu-magnifier-handle {
-  position: absolute;
-  width: 3px; height: 35%;
-  background-color: #fff;
-  bottom: 5%; right: 15%;
-  transform: rotate(-45deg);
-  border-radius: 0 0 2px 2px;
-}
-.uu-search-container {
-  position: relative;
-  display: flex; justify-content: center; align-items: center;
+.mobile-category-btn img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  grid-area: 1 / 1 / -1 / -1;
 }
 
 /* カテゴリ選択オーバーレイ */
@@ -100,9 +81,6 @@
     border-width: 2px; border-radius: 9px;
     box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
   }
-  .panel-category-btn .uu-box { border-width: 2px; border-radius: 2px; }
-  .panel-category-btn .uu-magnifier-circle { border-width: 2px; }
-  .panel-category-btn .uu-magnifier-handle { width: 2px; }
 }
 
 /* ★★★ スマホ(縦向き)専用 ★★★ */
