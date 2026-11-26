@@ -34,6 +34,12 @@ export function normalizeTrackFileName(file) {
     .replace(/\s+/g, "_");
 }
 
+// カード展開時に使う中サイズ画像 (optimize_images.py で 800px に縮小したもの)
 export function getTrackImageSrc(file) {
   return `img/trackImage/${normalizeTrackFileName(file)}.webp`;
+}
+
+// カード一覧で使う小サイズ画像 (optimize_images.py で 480px に縮小したもの)
+export function getTrackThumbSrc(file) {
+  return `img/trackThumb/${normalizeTrackFileName(file)}.webp`;
 }
