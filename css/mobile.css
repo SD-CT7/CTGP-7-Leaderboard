@@ -23,8 +23,8 @@
 .mobile-category-btn:hover { transform: scale(1.08); }
 .mobile-category-btn:active { transform: scale(0.95); }
 .mobile-category-btn img {
-  width: 80%;
-  height: 80%;
+  width: 120%;
+  height: 120%;
   object-fit: contain;
   justify-self: center;
   align-self: center;
