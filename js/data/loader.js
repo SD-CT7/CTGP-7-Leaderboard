@@ -11,16 +11,23 @@ const totalImages = STATIC_ICONS.length;
 const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1;
 const totalAssets = totalImages + totalCsvs;
 
+// 全アセットの読み込み完了 かつ データの後処理(マップ構築・switchCategory)完了で消す。
+// 以前は setTimeout(500ms) の固定待ちで後処理の完了を見込んでいたが、
+// 条件を明示してタイマーを廃止した。
+let dataReady = false;
+let loadingHidden = false;
+
+function tryHideLoading() {
+  if (loadingHidden || !dataReady || loadedAssets < totalAssets) return;
+  loadingHidden = true;
+  document.getElementById('loading-screen').classList.add('hidden');
+}
+
 function updateProgress() {
   loadedAssets++;
   const percent = Math.min((loadedAssets / totalAssets) * 100, 100);
   document.getElementById('progress-bar').style.width = percent + '%';
-
-  if (loadedAssets >= totalAssets) {
-    setTimeout(() => {
-      document.getElementById('loading-screen').classList.add('hidden');
-    }, 500);
-  }
+  tryHideLoading();
 }
 
 export function preloadStaticIcons() {
@@ -235,4 +242,7 @@ export async function startLoadingProcess() {
 
   window.switchCategory('General');
   window.checkInitialPlayerRoute();
+
+  dataReady = true;
+  tryHideLoading();
 }
