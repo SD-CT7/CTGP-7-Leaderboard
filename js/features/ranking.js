@@ -5,17 +5,15 @@ import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
-import { getCategoryDataKey } from '../data/categories.js';
 import { openCategoryPicker } from '../ui/categoryPicker.js';
 
 export function switchCategory(cat) {
-  const key = getCategoryDataKey(cat);
-  if (state.allCategoryData[key]) {
+  if (state.allCategoryData[cat]) {
     state.currentCategory = cat;
-    state.globalRankingData = state.allCategoryData[key];
+    state.globalRankingData = state.allCategoryData[cat];
     if (state.currentSelectedCourse) renderRankingList();
   } else {
-    console.warn("Data not ready for " + key);
+    console.warn("Data not ready for " + cat);
   }
 }
 
