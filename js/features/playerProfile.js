@@ -1,7 +1,6 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
-import { getCategoryDataKey } from '../data/categories.js';
 import { openCategoryPicker } from '../ui/categoryPicker.js';
 import {
   getVideoIcon,
@@ -10,8 +9,7 @@ import {
 } from '../ui/videoModal.js';
 
 export function getPlayerCourseRows(name, catKey) {
-  const key = getCategoryDataKey(catKey);
-  const categoryData = state.allCategoryData[key] || {};
+  const categoryData = state.allCategoryData[catKey] || {};
 
   return RAW_CSV_DATA.map(course => {
     const trackKey = course.file.substring(4);
