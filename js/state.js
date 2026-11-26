@@ -1,5 +1,3 @@
-import { FALLBACK_PLAYER_DATA } from './data/playerFallback.js';
-
 export const state = {
   allCategoryData: {},
   globalRankingData: {},
@@ -10,7 +8,8 @@ export const state = {
   currentSelectedCourse: null,
   placeholderEl: null,
   cardRects: new Map(),
-  playerLeaderboardData: FALLBACK_PLAYER_DATA,
+  currentCategory: 'General',
+  leaderboardCategory: 'General',
   globalPlayerChannelMap: {},
   globalPlayerCountryMap: {},
   leaderboardActive: false,
@@ -23,6 +22,5 @@ export const state = {
 
 // 後方互換性: loader.js 等が window オブジェクトを参照している場合のために透過的に接続
 Object.defineProperty(window, 'allCategoryData', { get: () => state.allCategoryData, set: v => state.allCategoryData = v });
-Object.defineProperty(window, 'playerLeaderboardData', { get: () => state.playerLeaderboardData, set: v => state.playerLeaderboardData = v });
 Object.defineProperty(window, 'globalPlayerChannelMap', { get: () => state.globalPlayerChannelMap, set: v => state.globalPlayerChannelMap = v });
 Object.defineProperty(window, 'globalPlayerCountryMap', { get: () => state.globalPlayerCountryMap, set: v => state.globalPlayerCountryMap = v });

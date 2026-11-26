@@ -104,20 +104,3 @@ export function parseRankingCsv(csvText) {
 
   return resultData;
 }
-
-export function parsePlayerLeaderboardCsv(csvText) {
-  const rows = parseCsv(csvText);
-  const result = [];
-  for (let i = 1; i < rows.length; i++) {
-    const cells = rows[i];
-    if (cells.length < 13) continue;
-    const name = cells[10] ? cells[10].trim() : '';
-    const points = parseInt((cells[11] || '').trim(), 10);
-    const rank = parseInt((cells[12] || '').trim(), 10);
-    // 数値でない行(列ズレ・ゴミ行)は取り込まない
-    if (name && Number.isFinite(points) && Number.isFinite(rank)) {
-      result.push({ rank, name, points });
-    }
-  }
-  return result;
-}

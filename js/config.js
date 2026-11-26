@@ -8,9 +8,6 @@ export const CSV_URLS = {
   Mission: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1676868794&single=true&output=csv"
 };
 
-export const PLAYER_LEADERBOARD_CSV_URL =
-  "https://docs.google.com/spreadsheets/d/e/2PACX-1vScYBDDVnDZcLrhBuS9Kg1fq60UTv3YDKeNBtwd0gepQ7Tz8QRg24IRmeteUWcrM7EiXEZwXeyEUFql/pub?gid=1119970158&single=true&output=csv";
-
 export const RANK_IMG_BASE = "img/rank/";
 export const RANK_EXT = ".webp";
 export const ICON_BASE_PATH = "img/cupImage/";

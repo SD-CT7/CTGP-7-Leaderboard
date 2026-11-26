@@ -1,15 +1,14 @@
 // js/data/loader.js
 
 import {
-  SUPABASE_URL, SUPABASE_KEY, CSV_URLS,
-  PLAYER_LEADERBOARD_CSV_URL, STATIC_ICONS,
+  SUPABASE_URL, SUPABASE_KEY, CSV_URLS, STATIC_ICONS,
 } from '../config.js';
-import { parseRankingCsv, parsePlayerLeaderboardCsv } from './parser.js';
+import { parseRankingCsv } from './parser.js';
 
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
 const totalImages = STATIC_ICONS.length;
-const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1 + 1;
+const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1;
 const totalAssets = totalImages + totalCsvs;
 
 function updateProgress() {
@@ -90,7 +89,6 @@ export function buildMapsFromPlayers(rows) {
 
 export async function startLoadingProcess() {
   const allCategoryData = window.allCategoryData;
-  let playerLeaderboardData = window.playerLeaderboardData;
 
   // Default / Mission はCSVから取得
   const csvPromises = Object.keys(CSV_URLS).map(async (key) => {
@@ -208,35 +206,11 @@ export async function startLoadingProcess() {
     }
   })();
 
-  // プレイヤーリーダーボードは公開CSVから取得
-  const playerLeaderboardPromise = (async () => {
-    if (!PLAYER_LEADERBOARD_CSV_URL) {
-      console.warn('PLAYER_LEADERBOARD_CSV_URL is not set, using fallback data.');
-      updateProgress();
-      return;
-    }
-    try {
-      const res = await fetch(PLAYER_LEADERBOARD_CSV_URL + "&t=" + Date.now());
-      if (!res.ok) throw new Error('Failed to load player leaderboard CSV');
-      const text = await res.text();
-      const parsed = parsePlayerLeaderboardCsv(text);
-      if (parsed.length > 0) {
-        window.playerLeaderboardData = parsed;
-        playerLeaderboardData = parsed;
-      }
-    } catch (e) {
-      console.warn(e);
-    } finally {
-      updateProgress();
-    }
-  })();
-
   await Promise.all([
     ...csvPromises,
     supabasePromise,
     flapPromise,
-    playersPromise,
-    playerLeaderboardPromise
+    playersPromise
   ]);
 
   // General のチャンネルURLと国コードは times ではなく players の情報を使う
@@ -258,9 +232,6 @@ export async function startLoadingProcess() {
     ...buildPlayerCountryMap(allCategoryData),
     ...playersMaps.country
   };
-  window.playerLeaderboardData.forEach(p => {
-    p.link = window.globalPlayerChannelMap[p.name] || null;
-  });
 
   window.switchCategory('General');
   window.checkInitialPlayerRoute();

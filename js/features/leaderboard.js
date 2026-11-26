@@ -1,11 +1,21 @@
 import { state } from '../state.js';
 import { countryMatchesFilter, openCountryFilterMenu } from './filter.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
+import { getCategoryDataKey } from '../data/categories.js';
+import { calculatePlayerPoints } from './points.js';
+import { openCategoryPicker } from '../ui/categoryPicker.js';
 
 export function renderPlayerLeaderboard() {
   const listEl = document.getElementById('playerRankingList');
   listEl.innerHTML = '';
-  const filteredData = state.playerLeaderboardData.filter(p => countryMatchesFilter(state.globalPlayerCountryMap[p.name]));
+  // ポイントはカテゴリ内の全コースの順位から計算する(順位は国フィルター適用前の全体順位)
+  const players = calculatePlayerPoints(state.allCategoryData[getCategoryDataKey(state.leaderboardCategory)]);
+  const filteredData = players.filter(p => countryMatchesFilter(state.globalPlayerCountryMap[p.name]));
+
+  if (filteredData.length === 0) {
+    listEl.innerHTML = '<div style="text-align:center; padding:30px 0; color:#aaa; font-weight:bold;">No data</div>';
+    return;
+  }
   
   filteredData.forEach((p, i) => {
     const row = document.createElement('div');
@@ -48,6 +58,12 @@ export function openLeaderboard() {
   }, 10);
 }
 
+export function switchLeaderboardCategory(cat) {
+  state.leaderboardCategory = cat;
+  document.querySelector('#leaderboard-panel .lb-body').scrollTop = 0;
+  renderPlayerLeaderboard();
+}
+
 export function closeLeaderboard() {
   const panel = document.getElementById('leaderboard-panel');
   const rect = state.cardRects.get('leaderboard-panel');
@@ -65,4 +81,5 @@ export function closeLeaderboard() {
 export function initLeaderboardEvents() {
   document.getElementById('leaderboard-btn').addEventListener('click', openLeaderboard);
   document.querySelector('#leaderboard-panel .earth-btn').addEventListener('click', openCountryFilterMenu);
+  document.querySelector('#leaderboard-panel .panel-category-btn').addEventListener('click', () => openCategoryPicker(state.leaderboardCategory, switchLeaderboardCategory));
 }

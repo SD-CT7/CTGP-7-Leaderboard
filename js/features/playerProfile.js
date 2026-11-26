@@ -1,6 +1,8 @@
 import { state } from '../state.js';
 import { RAW_CSV_DATA } from '../data/courses.js';
 import { escapeAttr, getRankImageSrc } from '../utils/dom.js';
+import { getCategoryDataKey } from '../data/categories.js';
+import { openCategoryPicker } from '../ui/categoryPicker.js';
 import {
   getVideoIcon,
   isModalVideoIcon,
@@ -8,7 +10,7 @@ import {
 } from '../ui/videoModal.js';
 
 export function getPlayerCourseRows(name, catKey) {
-  let key = (catKey === '200cc' || catKey === 'Shroomless') ? 'Default' : catKey;
+  const key = getCategoryDataKey(catKey);
   const categoryData = state.allCategoryData[key] || {};
 
   return RAW_CSV_DATA.map(course => {
@@ -163,14 +165,7 @@ export function initPlayerProfileEvents() {
     }
   });
 
-  document.querySelector('#player-profile-panel .pp-mobile-btn').addEventListener('click', () => document.getElementById('profile-mobile-category-overlay').classList.add('visible'));
-  
-  const profileMobileOverlay = document.getElementById('profile-mobile-category-overlay');
-  profileMobileOverlay.addEventListener('click', () => profileMobileOverlay.classList.remove('visible'));
-  profileMobileOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
-  profileMobileOverlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
-    item.addEventListener('click', () => { switchProfileCategory(item.dataset.cat); profileMobileOverlay.classList.remove('visible'); });
-  });
+  document.querySelector('#player-profile-panel .panel-category-btn').addEventListener('click', () => openCategoryPicker(state.currentProfileCategory, switchProfileCategory));
 
   document.getElementById('pp-sort-toggle').addEventListener('click', (e) => {
     const opt = e.target.closest('.sort-toggle-option[data-sort]');

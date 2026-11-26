@@ -5,10 +5,13 @@ import { FLAG_BASE_URL } from '../config.js';
 import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
+import { getCategoryDataKey } from '../data/categories.js';
+import { openCategoryPicker } from '../ui/categoryPicker.js';
 
 export function switchCategory(cat) {
-  let key = (cat === '200cc' || cat === 'Shroomless') ? 'Default' : cat;
+  const key = getCategoryDataKey(cat);
   if (state.allCategoryData[key]) {
+    state.currentCategory = cat;
     state.globalRankingData = state.allCategoryData[key];
     if (state.currentSelectedCourse) renderRankingList();
   } else {
@@ -135,12 +138,5 @@ export function initRankingEvents() {
   // document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
   document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
   document.querySelector('#ranking-screen .earth-btn').addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-country-filter')));
-  document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => document.getElementById('mobile-category-overlay').classList.add('visible'));
-
-  const mobileCatOverlay = document.getElementById('mobile-category-overlay');
-  mobileCatOverlay.addEventListener('click', () => mobileCatOverlay.classList.remove('visible'));
-  mobileCatOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
-  mobileCatOverlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
-    item.addEventListener('click', () => { switchCategory(item.dataset.cat); mobileCatOverlay.classList.remove('visible'); });
-  });
+  document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => openCategoryPicker(state.currentCategory, switchCategory));
 }

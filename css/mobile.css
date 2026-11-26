@@ -86,8 +86,24 @@
 .mode-toggle-container { align-items: center; gap: 10px; }
 .glitch-btn { width: 45px; height: 45px; font-size: 1.5rem; margin-left: 10px; }
 
-/* プレイヤープロフィール内のカテゴリボタン */
-.pp-mobile-btn { margin: 12px auto; }
+/* 選択中のカテゴリ */
+.mobile-category-item.selected { background: rgba(255,228,0,0.25); outline: 3px solid #ffe400; }
+
+/* プレイヤーランキング・プレイヤープロフィール内のカテゴリボタン
+   (標準: ヘッダー下の中央配置 / PC(横向き): パネル右上に小さく配置) */
+.panel-category-btn { margin: 12px auto; }
+
+@media (orientation: landscape) {
+  .panel-category-btn {
+    position: absolute; top: 18px; right: 15px; margin: 0; z-index: 2;
+    width: 34px; height: 34px; padding: 4px; gap: 2px;
+    border-width: 2px; border-radius: 9px;
+    box-shadow: 2px 2px 0 rgba(0,0,0,0.5);
+  }
+  .panel-category-btn .uu-box { border-width: 2px; border-radius: 2px; }
+  .panel-category-btn .uu-magnifier-circle { border-width: 2px; }
+  .panel-category-btn .uu-magnifier-handle { width: 2px; }
+}
 
 /* ★★★ スマホ(縦向き)専用 ★★★ */
   @media (orientation: portrait) {

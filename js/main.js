@@ -8,6 +8,7 @@ import { initPlayerProfileEvents, closePlayerProfile, openPlayerProfile, checkIn
 import { initRankingEvents, switchCategory, renderRankingList, showRankingScreen } from './features/ranking.js';
 import { initCupCards, resetCard } from './features/cupCards.js';
 import { initVideoModalEvents, openVideoModal } from './ui/videoModal.js';
+import { initCategoryPicker } from './ui/categoryPicker.js';
 
 // 後方互換性のため window に公開 (既存の loader.js 等の呼び出しに対応)
 window.switchCategory = switchCategory;
@@ -52,6 +53,7 @@ function initGlobalEvents() {
 
 // ===== 初期化 =====
 document.addEventListener('DOMContentLoaded', () => {
+  initCategoryPicker();
   initCupCards();
   initFilterEvents();
   initLeaderboardEvents();
