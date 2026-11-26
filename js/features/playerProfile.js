@@ -72,7 +72,6 @@ export function jumpToCourseFromProfile(course) {
 
 export function switchProfileCategory(cat) {
   state.currentProfileCategory = cat;
-  document.querySelectorAll('.pp-tab').forEach(t => t.classList.toggle('selected', t.dataset.cat === cat));
   renderPlayerProfileRecords();
 }
 
@@ -99,7 +98,6 @@ if (state.leaderboardActive) {
   const ppNameEl = document.getElementById('pp-name');
   ppNameEl.innerHTML = channelUrl ? `<a href="${channelUrl.replace(/\"/g, '&quot;')}" target="_blank" rel="noopener" class="name-link">${name}</a>` : name;
   
-  document.querySelectorAll('.pp-tab').forEach(t => t.classList.toggle('selected', t.dataset.cat === 'General'));
   document.querySelectorAll('.sort-toggle-option').forEach(el => el.classList.toggle('selected', el.dataset.sort === 'course'));
 
   const panel = document.getElementById('player-profile-panel');
@@ -172,11 +170,6 @@ export function initPlayerProfileEvents() {
   profileMobileOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
   profileMobileOverlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
     item.addEventListener('click', () => { switchProfileCategory(item.dataset.cat); profileMobileOverlay.classList.remove('visible'); });
-  });
-
-  document.getElementById('pp-tabs').addEventListener('click', (e) => {
-    const tab = e.target.closest('.pp-tab[data-cat]');
-    if (tab) switchProfileCategory(tab.dataset.cat);
   });
 
   document.getElementById('pp-sort-toggle').addEventListener('click', (e) => {

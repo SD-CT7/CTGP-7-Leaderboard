@@ -137,11 +137,6 @@ export function initRankingEvents() {
   document.querySelector('#ranking-screen .earth-btn').addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-country-filter')));
   document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => document.getElementById('mobile-category-overlay').classList.add('visible'));
 
-  document.querySelector('.capsule').addEventListener('click', (e) => {
-    const item = e.target.closest('.capsule-item[data-cat]');
-    if (item) switchCategory(item.dataset.cat);
-  });
-
   const mobileCatOverlay = document.getElementById('mobile-category-overlay');
   mobileCatOverlay.addEventListener('click', () => mobileCatOverlay.classList.remove('visible'));
   mobileCatOverlay.querySelector('.mobile-category-list').addEventListener('click', (e) => e.stopPropagation());
