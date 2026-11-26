@@ -4,12 +4,13 @@ import {
   SUPABASE_URL, SUPABASE_KEY, CSV_URLS, STATIC_ICONS,
 } from '../config.js';
 import { parseRankingCsv } from './parser.js';
+import { getInitialCupImages, loadCupImage, loadRemainingCupImages } from '../features/cupCards.js';
 
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
 const totalImages = STATIC_ICONS.length;
 const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1;
-const totalAssets = totalImages + totalCsvs;
+let totalAssets = totalImages + totalCsvs; // 初期表示のカード画像を数に加えるため let
 
 // 全アセットの読み込み完了 かつ データの後処理(マップ構築・switchCategory)完了で消す。
 // 以前は setTimeout(500ms) の固定待ちで後処理の完了を見込んでいたが、
@@ -21,6 +22,8 @@ function tryHideLoading() {
   if (loadingHidden || !dataReady || loadedAssets < totalAssets) return;
   loadingHidden = true;
   document.getElementById('loading-screen').classList.add('hidden');
+  // 画面が消えたら、まだ読み込んでいない(画面外の)カード画像を読み込む
+  loadRemainingCupImages();
 }
 
 function updateProgress() {
@@ -37,6 +40,15 @@ export function preloadStaticIcons() {
     img.onerror = updateProgress;
     img.src = src;
   });
+}
+
+// 初期表示で見えているカード画像を、ローディングの完了条件に加える。
+// 画面が消える瞬間には、これらが読み込み・デコード済みになっている。
+// (initCupCards() の後、かつ他のロード処理を始める前に同期的に呼ぶこと)
+export function preloadInitialCupImages() {
+  const imgs = getInitialCupImages();
+  totalAssets += imgs.length;
+  imgs.forEach(img => loadCupImage(img).then(updateProgress));
 }
 
 export function buildPlayerChannelMap(allCategoryData) {
