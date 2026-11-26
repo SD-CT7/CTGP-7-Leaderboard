@@ -1,15 +1,14 @@
 // js/data/loader.js
 
 import {
-  SUPABASE_URL, SUPABASE_KEY, CSV_URLS, STATIC_ICONS,
+  SUPABASE_URL, SUPABASE_KEY, STATIC_ICONS,
 } from '../config.js';
-import { parseRankingCsv } from './parser.js';
 import { getInitialCupImages, loadCupImage, loadRemainingCupImages } from '../features/cupCards.js';
 
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
 const totalImages = STATIC_ICONS.length;
-const totalCsvs = Object.keys(CSV_URLS).length + 1 + 1 + 1;
+const totalCsvs = 1 + 3 + 1; // General + (Flap/Mission/Shroomless) + players
 let totalAssets = totalImages + totalCsvs; // 初期表示のカード画像を数に加えるため let
 
 // 全アセットの読み込み完了 かつ データの後処理(マップ構築・switchCategory)完了で消す。
@@ -109,22 +108,6 @@ export function buildMapsFromPlayers(rows) {
 export async function startLoadingProcess() {
   const allCategoryData = window.allCategoryData;
 
-  // Default / Mission はCSVから取得
-  const csvPromises = Object.keys(CSV_URLS).map(async (key) => {
-    const url = CSV_URLS[key];
-    try {
-      const res = await fetch(url + "&t=" + Date.now());
-      if (!res.ok) throw new Error(`Failed to load ${key}`);
-      const text = await res.text();
-      allCategoryData[key] = parseRankingCsv(text);
-    } catch (e) {
-      console.warn(e);
-      allCategoryData[key] = {};
-    } finally {
-      updateProgress();
-    }
-  });
-
   // General は Supabase から取得
   const supabasePromise = (async () => {
     try {
@@ -163,30 +146,31 @@ export async function startLoadingProcess() {
     }
   })();
 
-  // Flap は Supabase(flap_leaderboard ビュー)から取得
-  const flapPromise = (async () => {
+  // Flap / Mission / Shroomless は Supabase のビューから取得(形式は共通)
+  const fmtMs = (ms) => {
+    const m = Math.floor(ms / 60000);
+    const sec = Math.floor((ms % 60000) / 1000);
+    return m + ':' + String(sec).padStart(2, '0') + '.' + String(ms % 1000).padStart(3, '0');
+  };
+
+  const fetchLeaderboardView = async (categoryKey, viewName) => {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/flap_leaderboard?select=track_key,place,player,country,channel_url,time_ms,video_url&order=track_key,place,time_ms&limit=5000',
+        SUPABASE_URL + '/rest/v1/' + viewName + '?select=track_key,place,player,country,channel_url,time_ms,video_url&order=track_key,place,time_ms&limit=5000',
         {
           headers: {
             'apikey': SUPABASE_KEY,
           }
         }
       );
-      if (!res.ok) throw new Error('Failed to load Flap from Supabase');
+      if (!res.ok) throw new Error(`Failed to load ${categoryKey} from Supabase`);
       const rows = await res.json();
 
-      const fmtMs = (ms) => {
-        const m = Math.floor(ms / 60000);
-        const sec = Math.floor((ms % 60000) / 1000);
-        return m + ':' + String(sec).padStart(2, '0') + '.' + String(ms % 1000).padStart(3, '0');
-      };
-      const flapData = {};
+      const data = {};
       for (const row of rows) {
         const track = String(row.track_key || '').toLowerCase();
-        if (!flapData[track]) flapData[track] = { without: [], dekatire: [] };
-        flapData[track]['without'].push({
+        if (!data[track]) data[track] = { without: [], dekatire: [] };
+        data[track]['without'].push({
           rank: row.place,
           name: row.player,
           time: fmtMs(row.time_ms),
@@ -195,14 +179,18 @@ export async function startLoadingProcess() {
           country: row.country || '-',
         });
       }
-      allCategoryData['Flap'] = flapData;
+      allCategoryData[categoryKey] = data;
     } catch (e) {
       console.warn(e);
-      allCategoryData['Flap'] = {};
+      allCategoryData[categoryKey] = {};
     } finally {
       updateProgress();
     }
-  })();
+  };
+
+  const flapPromise = fetchLeaderboardView('Flap', 'flap_leaderboard');
+  const missionPromise = fetchLeaderboardView('Mission', 'mission_leaderboard');
+  const shroomlessPromise = fetchLeaderboardView('Shroomless', 'shroomless_leaderboard');
 
   // プレイヤー情報は Supabase の players テーブルから取得
   let playersMaps = { channel: {}, country: {} };
@@ -226,9 +214,10 @@ export async function startLoadingProcess() {
   })();
 
   await Promise.all([
-    ...csvPromises,
     supabasePromise,
     flapPromise,
+    missionPromise,
+    shroomlessPromise,
     playersPromise
   ]);
 
