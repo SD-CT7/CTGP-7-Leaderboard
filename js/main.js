@@ -1,6 +1,6 @@
 // js/main.js
 import { state } from './state.js';
-import { preloadStaticIcons, startLoadingProcess } from './data/loader.js';
+import { preloadStaticIcons, preloadInitialCupImages, startLoadingProcess } from './data/loader.js';
 
 import { initFilterEvents, openCountryFilterMenu } from './features/filter.js';
 import { initLeaderboardEvents, closeLeaderboard, renderPlayerLeaderboard } from './features/leaderboard.js';
@@ -63,5 +63,6 @@ document.addEventListener('DOMContentLoaded', () => {
   initGlobalEvents();
   
   preloadStaticIcons();
+  preloadInitialCupImages();
   startLoadingProcess();
 });
