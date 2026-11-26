@@ -2,12 +2,6 @@
 export const SUPABASE_URL = 'https://fpbwgncudjekqwplluct.supabase.co';
 export const SUPABASE_KEY = 'sb_publishable_CxryfeGj45IL6opyJJlEAg_s985qwS9';
 
-export const CSV_URLS = {
-  Default: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=2103674373&single=true&output=csv",
-  // Flap は Supabase(flap_leaderboard ビュー)から取得するため CSV 対象外
-  Mission: "https://docs.google.com/spreadsheets/d/e/2PACX-1vTG7cpe3sUQsINvQrt8pjd3dIOdKethaou57zQy-rFlycWeJqgNdAkDWvA5-OCQNmZOur_iokr9dEFo/pub?gid=1676868794&single=true&output=csv"
-};
-
 export const RANK_IMG_BASE = "img/rank/";
 export const RANK_EXT = ".webp";
 export const ICON_BASE_PATH = "img/cupImage/";
@@ -26,7 +20,6 @@ export const STATIC_ICONS = [
   "img/favicon/novideo.webp",
   "img/favicon/excel.webp",
   "img/category/general.webp",
-  "img/category/200cc.webp",
   "img/category/shroomless.webp",
   "img/category/mission.webp",
   "img/category/flap.webp"
