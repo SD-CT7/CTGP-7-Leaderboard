@@ -1,0 +1,4 @@
+User-agent: *
+Allow: /
+
+Sitemap: https://ctgp-7-leaderboard.netlify.app/sitemap.xml
