@@ -73,6 +73,7 @@
 .mode-toggle-container { align-items: center; gap: 10px; }
 .glitch-btn { width: 45px; height: 45px; font-size: 1.5rem; margin-left: 10px; }
 .history-btn { width: 45px; height: 45px; margin-left: 10px; }
+.mode-toggle-container .earth-btn { margin-left: 10px; }
 
 /* 選択中のカテゴリ */
 .mobile-category-item.selected { background: rgba(255,228,0,0.25); outline: 3px solid #ffe400; }
