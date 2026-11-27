@@ -75,6 +75,15 @@
 .history-btn { width: 45px; height: 45px; margin-left: 10px; }
 .mode-toggle-container .earth-btn { margin-left: 10px; }
 
+/* Glitch / History は非対応のコースでも場所を確保して(見えなくするだけ)、
+   他のボタンの位置が動かないようにする */
+.mode-toggle-container .glitch-btn.hidden,
+.mode-toggle-container .history-btn.hidden {
+  display: flex !important;
+  visibility: hidden;
+  pointer-events: none;
+}
+
 /* 選択中のカテゴリ */
 .mobile-category-item.selected { background: rgba(255,228,0,0.25); outline: 3px solid #ffe400; }
 
