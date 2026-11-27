@@ -17,7 +17,12 @@ export const state = {
   currentProfileName: null,
   currentProfileCategory: 'General',
   currentProfileSortMode: 'course',
-  countryFilter: { type: 'all', value: null }
+  countryFilter: { type: 'all', value: null },
+  // History(過去バージョン閲覧)。historyVersion: 0 = 現行 / 1以上 = 過去(数字が大きいほど古い)
+  historyOpen: false,
+  historyVersion: 0,
+  historyStatus: 'idle',   // 'idle' | 'loading' | 'ready' | 'error'
+  historyRows: []
 };
 
 // 後方互換性: loader.js 等が window オブジェクトを参照している場合のために透過的に接続
