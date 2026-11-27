@@ -121,6 +121,8 @@
 }
 .history-pill:hover { transform: scale(1.05); filter: brightness(1.1); }
 .history-pill.selected { background: var(--gold-smooth); }
+.obsolete-note { max-width: 800px; margin: -10px auto 20px auto; text-align: center; font-size: 0.9rem; font-weight: bold; color: #ff3b3b; font-family: Arial, sans-serif; }
+.obsolete-note.hidden { display: none; }
 .history-note { margin-top: 10px; font-size: 0.85rem; color: #bbb; font-family: Arial, sans-serif; }
 
 .ranking-list { display: flex; flex-direction: column; align-items: center; width: 100%; }
