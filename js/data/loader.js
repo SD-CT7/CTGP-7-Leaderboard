@@ -4,6 +4,7 @@ import {
   SUPABASE_URL, SUPABASE_KEY, STATIC_ICONS,
 } from '../config.js';
 import { getInitialCupImages, loadCupImage, loadRemainingCupImages } from '../features/cupCards.js';
+import { loadHistoryAvailability } from '../features/history.js';
 
 // 進捗管理用の状態（このモジュール内で完結）
 let loadedAssets = 0;
@@ -112,7 +113,7 @@ export async function startLoadingProcess() {
   const supabasePromise = (async () => {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video&category=eq.General&order=track_name,rank&limit=5000',
+        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video&category=eq.General&version=eq.0&order=track_name,rank&limit=5000',
         {
           headers: {
             'apikey': SUPABASE_KEY,
@@ -243,6 +244,9 @@ export async function startLoadingProcess() {
 
   window.switchCategory('General');
   window.checkInitialPlayerRoute();
+
+  // 過去バージョンがあるコースの一覧(任意機能なのでローディングの完了条件には含めない)
+  loadHistoryAvailability();
 
   dataReady = true;
   tryHideLoading();
