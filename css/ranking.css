@@ -11,7 +11,7 @@
 
 /* モード切替ボタンの親コンテナ：z-index 600 */
 .mode-toggle-container { 
-  flex: 1; display: flex; justify-content: center; 
+  flex: 1; display: flex; justify-content: flex-start; 
   position: relative; z-index: 600; 
 }
 
@@ -92,7 +92,7 @@
   transition: transform 0.1s, background 0.2s, box-shadow 0.2s;
   position: relative;
 }
-.history-btn img { width: 80%; height: 80%; object-fit: contain; pointer-events: none; }
+.history-btn img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
 .history-btn:hover::after {
   content: attr(data-tooltip);
   position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
