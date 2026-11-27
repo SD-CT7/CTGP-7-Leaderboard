@@ -92,7 +92,7 @@
   transition: transform 0.1s, background 0.2s, box-shadow 0.2s;
   position: relative;
 }
-.history-btn img { width: 90%; height: 90%; object-fit: contain; pointer-events: none; }
+.history-btn img { width: 80%; height: 80%; object-fit: contain; pointer-events: none; }
 .history-btn:hover::after {
   content: attr(data-tooltip);
   position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
