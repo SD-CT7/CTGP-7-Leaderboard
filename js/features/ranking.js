@@ -6,13 +6,13 @@ import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
 import { openCategoryPicker } from '../ui/categoryPicker.js';
-import { initHistory, resetHistory } from './history.js';
+import { initHistory, resetHistory, autoOpenHistoryIfCurrentEmpty } from './history.js';
 
 export function switchCategory(cat) {
   if (state.allCategoryData[cat]) {
     state.currentCategory = cat;
     state.globalRankingData = state.allCategoryData[cat];
-    if (state.currentSelectedCourse) { resetHistory(); renderRankingList(); }
+    if (state.currentSelectedCourse) { resetHistory(); renderRankingList(); autoOpenHistoryIfCurrentEmpty(); }
   } else {
     console.warn("Data not ready for " + cat);
   }
@@ -35,6 +35,7 @@ export function showRankingScreen(c) {
   glitchBtn.classList.toggle('hidden', !GLITCH_COURSES.includes(c.name));
 
   renderRankingList();
+  autoOpenHistoryIfCurrentEmpty();
   window.scrollTo(0, 0);
 }
 
@@ -57,6 +58,7 @@ export function toggleGlitchMode() {
   resetHistory();
   updateToggleUI();
   renderRankingList();
+  autoOpenHistoryIfCurrentEmpty();
 }
 
 export function toggleReadMore() {
@@ -72,6 +74,11 @@ function updateToggleUI() {
   if (state.isGlitch) btnGlitch.classList.add('active');
 }
 
+function updateObsoleteNote(data) {
+  const el = document.getElementById('obsolete-note');
+  if (el) el.classList.toggle('hidden', !data.some(d => d.isObsolete));
+}
+
 export function renderRankingList() {
   const listEl = document.getElementById('rankingList');
   listEl.innerHTML = '';
@@ -83,12 +90,15 @@ export function renderRankingList() {
   if (state.historyVersion > 0 && state.historyStatus !== 'ready') {
     const msg = state.historyStatus === 'error' ? 'Failed to load history' : 'Loading...';
     listEl.innerHTML = `<div style="text-align:center; padding:30px 0; color:#aaa; font-weight:bold;">${msg}</div>`;
+    updateObsoleteNote([]);
     return;
   }
 
   let data = state.historyVersion > 0
     ? state.historyRows
     : (state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : []);
+  // is_obsolete が TRUE の記録が1件でもあれば、赤字の注意書きを表示する
+  updateObsoleteNote(data);
   // 国は players テーブル由来の辞書を優先し、無ければ記録行の値を使う
   const countryOf = (d) => state.globalPlayerCountryMap[d.name] || d.country;
   data = data.filter(d => countryMatchesFilter(countryOf(d)));

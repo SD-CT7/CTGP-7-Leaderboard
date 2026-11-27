@@ -55,7 +55,7 @@ async function fetchRows(trackName, version) {
   const ck = `${trackName}|${version}`;
   if (cache.has(ck)) return cache.get(ck);
   const rows = await sbFetch(
-    'times?select=rank,player,time,video&category=eq.General' +
+    'times?select=rank,player,time,video,is_obsolete&category=eq.General' +
     '&track_name=eq.' + encodeURIComponent(trackName) +
     '&version=eq.' + version + '&order=rank&limit=500'
   );
@@ -65,6 +65,7 @@ async function fetchRows(trackName, version) {
     time: r.time || '-',
     video: r.video || '-',
     channel: '-',
+    isObsolete: r.is_obsolete === true,
     country: '-',   // 国は ranking.js が players 由来の辞書で補完する
   }));
   cache.set(ck, data);
@@ -137,10 +138,23 @@ export function resetHistory() {
   renderBar();
 }
 
+// 現行(version 0)の記録が無く、過去バージョンだけがあるコース(修正済みの Glitch など)は、
+// 空の表を見せる代わりに最新の過去バージョンを自動で開く。
+export function autoOpenHistoryIfCurrentEmpty() {
+  const entry = currentEntry();
+  if (!entry || state.historyVersion !== 0 || state.historyOpen) return;
+  const key = currentKey();
+  const cur = state.globalRankingData && state.globalRankingData[key];
+  if (cur && (cur[state.currentTire] || []).length > 0) return;
+  state.historyOpen = true;
+  selectHistoryVersion(Math.min(...entry.versions));
+}
+
 export function refreshHistoryUI() {
   // 履歴の有無が後から分かった場合などに、現在の状態を保ったままボタンだけ更新する
   if (!state.currentSelectedCourse) return;
   renderBar();
+  autoOpenHistoryIfCurrentEmpty();   // 履歴の一覧が後から届いた場合にも対応
 }
 
 export function initHistory(rerenderFn) {
