@@ -6,12 +6,13 @@ import { countryMatchesFilter } from './filter.js';
 import { getVideoIcon, isModalVideoIcon, NO_VIDEO_ICON } from '../ui/videoModal.js';
 import { getRankImageSrc } from '../utils/dom.js';
 import { openCategoryPicker } from '../ui/categoryPicker.js';
+import { initHistory, resetHistory } from './history.js';
 
 export function switchCategory(cat) {
   if (state.allCategoryData[cat]) {
     state.currentCategory = cat;
     state.globalRankingData = state.allCategoryData[cat];
-    if (state.currentSelectedCourse) renderRankingList();
+    if (state.currentSelectedCourse) { resetHistory(); renderRankingList(); }
   } else {
     console.warn("Data not ready for " + cat);
   }
@@ -22,6 +23,7 @@ export function showRankingScreen(c) {
   state.currentTire = 'without';
   state.isGlitch = false;
   state.isReadMoreExpanded = false;
+  resetHistory();
   updateToggleUI();
 
   document.body.classList.remove('mode-expanded');
@@ -52,6 +54,7 @@ export function goBackToCups() {
 
 export function toggleGlitchMode() {
   state.isGlitch = !state.isGlitch;
+  resetHistory();
   updateToggleUI();
   renderRankingList();
 }
@@ -76,7 +79,16 @@ export function renderRankingList() {
   let key = state.currentSelectedCourse.file.substring(4);
   if (state.isGlitch) key += "_G";
 
-  let data = state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : [];
+  // History: 過去バージョンを選択中は、現行データの代わりに取得済みの過去記録を表示する
+  if (state.historyVersion > 0 && state.historyStatus !== 'ready') {
+    const msg = state.historyStatus === 'error' ? 'Failed to load history' : 'Loading...';
+    listEl.innerHTML = `<div style="text-align:center; padding:30px 0; color:#aaa; font-weight:bold;">${msg}</div>`;
+    return;
+  }
+
+  let data = state.historyVersion > 0
+    ? state.historyRows
+    : (state.globalRankingData[key] ? (state.globalRankingData[key][state.currentTire] || []) : []);
   // 国は players テーブル由来の辞書を優先し、無ければ記録行の値を使う
   const countryOf = (d) => state.globalPlayerCountryMap[d.name] || d.country;
   data = data.filter(d => countryMatchesFilter(countryOf(d)));
@@ -132,6 +144,7 @@ export function renderRankingList() {
 }
 
 export function initRankingEvents() {
+  initHistory(renderRankingList);
   document.querySelector('#ranking-screen .back-btn').addEventListener('click', goBackToCups);
   // document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
   document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
