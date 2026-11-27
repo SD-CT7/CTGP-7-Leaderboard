@@ -83,16 +83,16 @@
 .history-btn {
   width: 50px; height: 50px;
   margin-left: 20px;
-  background: #3498db;
+  background: var(--gray-smooth);
   border: 3px solid #000;
   border-radius: 50%;
-  color: #fff;
   display: flex; align-items: center; justify-content: center;
   cursor: pointer;
   box-shadow: 4px 4px 0 rgba(0,0,0,0.5);
   transition: transform 0.1s, background 0.2s, box-shadow 0.2s;
   position: relative;
 }
+.history-btn img { width: 70%; height: 70%; object-fit: contain; pointer-events: none; }
 .history-btn:hover::after {
   content: attr(data-tooltip);
   position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
@@ -102,11 +102,9 @@
 }
 .history-btn:hover { transform: scale(1.1); filter: brightness(1.1); }
 .history-btn.active {
-  background: #7f8c8d;
-  box-shadow: inset 3px 3px 5px rgba(0,0,0,0.5);
+  background: var(--gold-smooth);
+  box-shadow: inset 3px 3px 5px rgba(0,0,0,0.3);
   transform: translateY(2px);
-  color: #eee;
-  border-color: #555;
 }
 
 /* バージョン選択バー(ヘッダーとランキングの間) */
