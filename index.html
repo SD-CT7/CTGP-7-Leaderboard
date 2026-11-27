@@ -19,7 +19,8 @@
   <meta name="description" content="Time Trial Leaderboard for CTGP-7. Check the latest world records and rankings">
   <title>CTGP-7 TT Leaderboard</title>
 
-  <base href="/">
+  <!-- 本番(Netlify)は "/"、確認用の GitHub Pages(サブパス配信)は "/CTGP-7-Leaderboard/" を基準にする -->
+  <script>document.write('<base href="' + (location.hostname.endsWith('github.io') ? '/CTGP-7-Leaderboard/' : '/') + '">');</script>
 
   <link rel="icon" href="./favicon.ico" type="image/x-icon" sizes="any">
   <link rel="icon" href="./favicon.png" type="image/png" sizes="256x256">
