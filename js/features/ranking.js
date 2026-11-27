@@ -85,6 +85,7 @@ export function renderRankingList() {
 
   let key = state.currentSelectedCourse.file.substring(4);
   if (state.isGlitch) key += "_G";
+  key = key.toLowerCase();   // General のデータは小文字キー(gcn_mushroom_city_g)で保持している
 
   // History: 過去バージョンを選択中は、現行データの代わりに取得済みの過去記録を表示する
   if (state.historyVersion > 0 && state.historyStatus !== 'ready') {
