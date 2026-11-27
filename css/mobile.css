@@ -70,7 +70,7 @@
 }
 
 /* ランキング画面ヘッダーのボタン並び */
-.mode-toggle-container { align-items: center; gap: 10px; }
+.mode-toggle-container { align-items: center; gap: 10px; padding-left: 20px; }  /* Backボタンとの間隔 */
 .glitch-btn { width: 45px; height: 45px; font-size: 1.5rem; margin-left: 10px; }
 .history-btn { width: 45px; height: 45px; margin-left: 10px; }
 .mode-toggle-container .earth-btn { margin-left: 10px; }
