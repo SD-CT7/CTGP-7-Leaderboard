@@ -160,5 +160,5 @@ export function initRankingEvents() {
   // document.querySelector('#ranking-screen .mode-toggle').addEventListener('click', toggleMode);
   document.getElementById('glitch-btn').addEventListener('click', toggleGlitchMode);
   document.querySelector('#ranking-screen .earth-btn').addEventListener('click', () => window.dispatchEvent(new CustomEvent('open-country-filter')));
-  document.querySelector('#ranking-screen .mobile-category-btn').addEventListener('click', () => openCategoryPicker(state.currentCategory, switchCategory));
+  document.querySelector('#ranking-screen .category-btn').addEventListener('click', () => openCategoryPicker(state.currentCategory, switchCategory));
 }

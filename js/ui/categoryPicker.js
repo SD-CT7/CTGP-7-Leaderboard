@@ -12,7 +12,7 @@ function close() {
 export function openCategoryPicker(current, callback) {
   onSelect = callback;
   const overlay = getOverlay();
-  overlay.querySelectorAll('.mobile-category-item[data-cat]').forEach(item => {
+  overlay.querySelectorAll('.category-item[data-cat]').forEach(item => {
     item.classList.toggle('selected', item.dataset.cat === current);
   });
   overlay.classList.add('visible');
@@ -21,9 +21,9 @@ export function openCategoryPicker(current, callback) {
 export function initCategoryPicker() {
   const overlay = getOverlay();
   overlay.addEventListener('click', close);
-  overlay.querySelector('.mobile-category-list').addEventListener('click', (e) => {
+  overlay.querySelector('.category-list').addEventListener('click', (e) => {
     e.stopPropagation();
-    const item = e.target.closest('.mobile-category-item[data-cat]');
+    const item = e.target.closest('.category-item[data-cat]');
     if (!item) return;
     const cb = onSelect;
     close();
