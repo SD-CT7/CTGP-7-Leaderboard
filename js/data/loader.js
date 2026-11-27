@@ -113,7 +113,7 @@ export async function startLoadingProcess() {
   const supabasePromise = (async () => {
     try {
       const res = await fetch(
-        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video&category=eq.General&version=eq.0&order=track_name,rank&limit=5000',
+        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video,is_obsolete&category=eq.General&version=eq.0&order=track_name,rank&limit=5000',
         {
           headers: {
             'apikey': SUPABASE_KEY,
@@ -136,6 +136,7 @@ export async function startLoadingProcess() {
           video: row.video || '-',
           channel: '-',
           country: '-',
+          isObsolete: row.is_obsolete === true,
         });
       }
       allCategoryData['General'] = generalData;
