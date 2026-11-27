@@ -78,6 +78,7 @@
   <link rel="modulepreload" href="./js/data/courses.js">
   <link rel="modulepreload" href="./js/data/regions.js">
   <link rel="modulepreload" href="./js/features/points.js">
+  <link rel="modulepreload" href="./js/features/history.js">
   <link rel="modulepreload" href="./js/utils/dom.js">
 </head>
 
@@ -233,6 +234,13 @@
 
         <div id="glitch-btn" class="glitch-btn hidden" data-tooltip="Glitch Category">G</div>
 
+        <div id="history-btn" class="history-btn hidden" data-tooltip="History (older course versions)">
+          <svg viewBox="0 0 24 24" width="26" height="26" fill="none" stroke="currentColor" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
+            <circle cx="12" cy="12" r="9"></circle>
+            <polyline points="12 7 12 12 15.5 14"></polyline>
+          </svg>
+        </div>
+
         <div class="mobile-category-btn">
           <img src="img/category.svg" alt="Categories">
         </div>
@@ -244,6 +252,8 @@
 
       <h2 id="ranking-course-title" class="course-title">Course Name</h2>
     </div>
+
+    <div id="history-bar" class="history-bar hidden"></div>
 
     <div class="ranking-list" id="rankingList"></div>
   </div>
