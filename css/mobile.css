@@ -93,3 +93,11 @@
       grid-template-columns: 1fr;
     }
   }
+
+
+/* ★★★ タッチ端末(カーソルなし)専用: 縦横どちらでも明るく表示 ★★★ */
+@media (hover: none) {
+  .course-img-wrapper img { filter: brightness(1.0) grayscale(0%) !important; }
+  /* カップアイコン: 通常時の暗さ(0.8)をやめる。開いた状態(.active)は cups.css 側の指定が優先される */
+  .cup-icon-wrapper img { filter: brightness(1.1) drop-shadow(2px 2px 0 rgba(0,0,0,1.0)); }
+}
