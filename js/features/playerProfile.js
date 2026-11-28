@@ -50,7 +50,7 @@ export function renderPlayerProfileRecords() {
 
     if (hasRecord && r.video && r.video !== '-') {
       const iconSrc = getVideoIcon(r.video);
-      const isModalTarget = isModalVideoIcon(iconSrc);
+      const isModalTarget = isModalVideoIcon(iconSrc, r.video);
       const safeHref = escapeAttr(String(r.video));
       timeHtml = `<a href="${safeHref}" target="_blank" rel="noopener" class="time-link">${r.time}</a>`;
       iconHtml = isModalTarget 
