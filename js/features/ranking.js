@@ -134,7 +134,7 @@ export function renderRankingList() {
     } else {
       rankContent = `<span style="font-size:1.5rem;font-weight:bold;">${d.rank}</span>`;
     }
-    const isModalTarget = isModalVideoIcon(iconSrc);
+    const isModalTarget = isModalVideoIcon(iconSrc, d.video);
 
     const iconHtml = hasVid
       ? (isModalTarget
