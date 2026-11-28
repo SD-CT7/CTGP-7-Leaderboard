@@ -42,6 +42,12 @@ function initGlobalEvents() {
     if (videoIcon) { openVideoModal(videoIcon.dataset.videoUrl); return; }
   });
 
+  // 動的イベント委譲: プレイヤープロフィールの記録一覧
+  document.getElementById('ppRecordList').addEventListener('click', (e) => {
+    const videoIcon = e.target.closest('.video-icon[data-video-url]');
+    if (videoIcon) { openVideoModal(videoIcon.dataset.videoUrl); return; }
+  });
+
   // 動的イベント委譲: プレイヤーリーダーボード
   document.getElementById('playerRankingList').addEventListener('click', (e) => {
     const nameLink = e.target.closest('.name-link[data-player]');
