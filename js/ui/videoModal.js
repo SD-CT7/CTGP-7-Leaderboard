@@ -12,11 +12,18 @@ export function getVideoIcon(url) {
   return 'NO_VIDEO_ICON';
 }
 
-export function isModalVideoIcon(iconSrc) {
-  return iconSrc.includes('youtube.webp') || 
-         iconSrc.includes('discord.webp') || 
+// twimg(pbs.twimg.com / video.twimg.com)の直リンクはモーダルで再生する。
+// x.com / twitter.com のツイートURLは従来どおり別タブで開く。
+export function isTwimgUrl(url) {
+  return typeof url === 'string' && url.toLowerCase().includes('twimg');
+}
+
+// url を渡すと twimg も判定できる(アイコンが同じ x.webp でも、ツイートURLと区別するため)
+export function isModalVideoIcon(iconSrc, url) {
+  return iconSrc.includes('youtube.webp') ||
+         iconSrc.includes('discord.webp') ||
          iconSrc.includes('filenow.webp') ||
-         iconSrc.includes('x.webp');
+         isTwimgUrl(url);
 }
 
 export function openVideoModal(url) {
@@ -32,6 +39,21 @@ export function openVideoModal(url) {
   if (url.toLowerCase().includes('archive')) {
     modalVideo.src = url;
     modalVideo.style.display = 'block';
+    videoModal.classList.add('visible');
+    return;
+  }
+
+  // twimg: 画像(pbs.twimg.com/media/...)なら画像、それ以外は動画として再生する
+  if (isTwimgUrl(url)) {
+    const isImage = /\.(jpe?g|png|gif|webp)(\?|$)/i.test(url) || /[?&]format=(jpe?g|png|gif|webp)/i.test(url);
+    if (isImage) {
+      modalImage.src = url;
+      modalImage.style.display = 'block';
+    } else {
+      modalVideo.src = url;
+      modalVideo.style.display = 'block';
+      modalVideo.play().catch(() => {});
+    }
     videoModal.classList.add('visible');
     return;
   }
