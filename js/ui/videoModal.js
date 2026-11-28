@@ -51,8 +51,12 @@ export function openVideoModal(url) {
       modalImage.style.display = 'block';
     } else {
       modalVideo.src = url;
-      modalVideo.style.display = 'block';
-      modalVideo.play().catch(() => {});
+modalVideo.style.display = 'block';
+modalVideo.controls = true;
+modalVideo.playsInline = true;
+modalVideo.load();
+
+videoModal.classList.add('visible');
     }
     videoModal.classList.add('visible');
     return;
