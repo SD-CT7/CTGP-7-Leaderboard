@@ -1,4 +1,3 @@
-
 export const NO_VIDEO_ICON = 'img/favicon/novideo.webp';
 
 export function getVideoIcon(url) {
