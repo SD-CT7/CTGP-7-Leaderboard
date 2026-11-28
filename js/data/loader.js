@@ -106,22 +106,34 @@ export function buildMapsFromPlayers(rows) {
   return { channel, country };
 }
 
+// Supabase の Max Rows(5000)を超えても取りこぼさないよう、ページ分割して全件取得する。
+// limit=5000 を指定しても、行数が 5000 を超えると超過分は黙って切り捨てられる(エラーにならない)。
+// 並び順が一意でないとページ境界で重複・欠落が起きるため、path の order には必ずタイブレーク用の列を含めること。
+const PAGE_SIZE = 1000;
+async function fetchAllRows(path) {
+  const rows = [];
+  for (let offset = 0; ; offset += PAGE_SIZE) {
+    const res = await fetch(
+      SUPABASE_URL + '/rest/v1/' + path + '&limit=' + PAGE_SIZE + '&offset=' + offset,
+      { headers: { 'apikey': SUPABASE_KEY } }
+    );
+    if (!res.ok) throw new Error('Supabase request failed: ' + path);
+    const page = await res.json();
+    rows.push(...page);
+    if (page.length < PAGE_SIZE) break;
+  }
+  return rows;
+}
+
 export async function startLoadingProcess() {
   const allCategoryData = window.allCategoryData;
 
   // General は Supabase から取得
   const supabasePromise = (async () => {
     try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/times?select=track_name,rank,player,time,video,is_obsolete&category=eq.General&version=eq.0&order=track_name,rank&limit=5000',
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-          }
-        }
+      const rows = await fetchAllRows(
+        'times?select=track_name,rank,player,time,video,is_obsolete&category=eq.General&version=eq.0&order=track_name,rank,player'
       );
-      if (!res.ok) throw new Error('Failed to load General from Supabase');
-      const rows = await res.json();
 
       const generalData = {};
       for (const row of rows) {
@@ -157,16 +169,9 @@ export async function startLoadingProcess() {
 
   const fetchLeaderboardView = async (categoryKey, viewName) => {
     try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/' + viewName + '?select=track_key,place,player,country,channel_url,time_ms,video_url&order=track_key,place,time_ms&limit=5000',
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-          }
-        }
+      const rows = await fetchAllRows(
+        viewName + '?select=track_key,place,player,country,channel_url,time_ms,video_url&order=track_key,place,time_ms,player'
       );
-      if (!res.ok) throw new Error(`Failed to load ${categoryKey} from Supabase`);
-      const rows = await res.json();
 
       const data = {};
       for (const row of rows) {
@@ -198,16 +203,8 @@ export async function startLoadingProcess() {
   let playersMaps = { channel: {}, country: {} };
   const playersPromise = (async () => {
     try {
-      const res = await fetch(
-        SUPABASE_URL + '/rest/v1/players?select=name,country,channel_url,aliases&order=id&limit=5000',
-        {
-          headers: {
-            'apikey': SUPABASE_KEY,
-          }
-        }
-      );
-      if (!res.ok) throw new Error('Failed to load players from Supabase');
-      playersMaps = buildMapsFromPlayers(await res.json());
+      const rows = await fetchAllRows('players?select=name,country,channel_url,aliases&order=id');
+      playersMaps = buildMapsFromPlayers(rows);
     } catch (e) {
       console.warn(e);
     } finally {
