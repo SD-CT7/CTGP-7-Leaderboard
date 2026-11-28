@@ -6,7 +6,7 @@ export function getVideoIcon(url) {
   if (!url || url === '-') return NO_VIDEO_ICON;
   const l = url.toLowerCase();
   if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) return 'img/favicon/youtube.webp';
-  if (l.includes('twitter') || l.includes('x.com')) return 'img/favicon/x.webp';
+  if (l.includes('twitter') || l.includes('x.com') || l.includes('twimg')) return 'img/favicon/x.webp';
   if (l.includes('d.kuku.lu')) return 'img/favicon/filenow.webp';
   if (l.includes('discord')) return 'img/favicon/discord.webp';
   return 'NO_VIDEO_ICON';
@@ -15,7 +15,8 @@ export function getVideoIcon(url) {
 export function isModalVideoIcon(iconSrc) {
   return iconSrc.includes('youtube.webp') || 
          iconSrc.includes('discord.webp') || 
-         iconSrc.includes('filenow.webp');
+         iconSrc.includes('filenow.webp') ||
+         iconSrc.includes('x.webp');
 }
 
 export function openVideoModal(url) {
