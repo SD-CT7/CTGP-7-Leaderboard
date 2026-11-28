@@ -1,33 +1,24 @@
+// js/ui/videoModal.js
+
 export const NO_VIDEO_ICON = 'img/favicon/novideo.webp';
 
 export function getVideoIcon(url) {
   if (!url || url === '-') return NO_VIDEO_ICON;
-
   const l = url.toLowerCase();
-
-  if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) {
-    return 'img/favicon/youtube.webp';
-  }
-
-  if (l.includes('twitter') || l.includes('x.com') || l.includes('twimg')) {
-    return 'img/favicon/x.webp';
-  }
-
-  if (l.includes('d.kuku.lu')) {
-    return 'img/favicon/filenow.webp';
-  }
-
-  if (l.includes('discord')) {
-    return 'img/favicon/discord.webp';
-  }
-
+  if (l.includes('youtube') || l.includes('youtu.be') || l.includes('archive')) return 'img/favicon/youtube.webp';
+  if (l.includes('twitter') || l.includes('x.com') || l.includes('twimg')) return 'img/favicon/x.webp';
+  if (l.includes('d.kuku.lu')) return 'img/favicon/filenow.webp';
+  if (l.includes('discord')) return 'img/favicon/discord.webp';
   return 'NO_VIDEO_ICON';
 }
 
+// twimg(pbs.twimg.com / video.twimg.com)の直リンクはモーダルで再生する。
+// x.com / twitter.com のツイートURLは従来どおり別タブで開く。
 export function isTwimgUrl(url) {
   return typeof url === 'string' && url.toLowerCase().includes('twimg');
 }
 
+// url を渡すと twimg も判定できる(アイコンが同じ x.webp でも、ツイートURLと区別するため)
 export function isModalVideoIcon(iconSrc, url) {
   return iconSrc.includes('youtube.webp') ||
          iconSrc.includes('discord.webp') ||
@@ -41,18 +32,10 @@ export function openVideoModal(url) {
   const modalVideo = document.getElementById('modal-video');
   const videoModal = document.getElementById('video-modal');
 
-  // 前回の動画・画像をリセット
-  youtubeFrame.style.display = 'none';
-  youtubeFrame.src = '';
+  youtubeFrame.style.display = 'none'; youtubeFrame.src = "";
+  modalImage.style.display = 'none'; modalImage.src = "";
+  modalVideo.style.display = 'none'; modalVideo.src = "";
 
-  modalImage.style.display = 'none';
-  modalImage.src = '';
-
-  modalVideo.pause();
-  modalVideo.removeAttribute('src');
-  modalVideo.style.display = 'none';
-
-  // Archive動画
   if (url.toLowerCase().includes('archive')) {
     modalVideo.src = url;
     modalVideo.style.display = 'block';
@@ -60,57 +43,42 @@ export function openVideoModal(url) {
     return;
   }
 
-  // X / Twitterの直リンク
+  // twimg: 画像(pbs.twimg.com/media/...)は <img>、動画は <iframe> で再生する。
+  // <video> に直接設定すると MEDIA_ERR_SRC_NOT_SUPPORTED(4) になるため、
+  // 既存の YouTube 用 iframe(#youtube-frame)に動画URLをそのまま設定する。
   if (isTwimgUrl(url)) {
-    const isImage =
-      /\.(jpe?g|png|gif|webp)(\?|$)/i.test(url) ||
-      /[?&]format=(jpe?g|png|gif|webp)/i.test(url);
-
+    const isImage = /\.(jpe?g|png|gif|webp)(\?|$)/i.test(url) || /[?&]format=(jpe?g|png|gif|webp)/i.test(url);
     if (isImage) {
-      // Xの画像
       modalImage.src = url;
       modalImage.style.display = 'block';
     } else {
-      // Xの動画はiframeで直接開く
       youtubeFrame.src = url;
       youtubeFrame.style.display = 'block';
     }
-
     videoModal.classList.add('visible');
     return;
   }
 
-  // YouTube動画IDの取得
   let vid = null;
-
   try {
     const u = new URL(url);
-
-    if (u.hostname === 'youtu.be') {
-      vid = u.pathname.slice(1);
-    } else if (u.hostname.includes('youtube')) {
+    if (u.hostname === 'youtu.be') vid = u.pathname.slice(1);
+    else if (u.hostname.includes('youtube')) {
       vid = u.searchParams.get('v');
-
       if (!vid) {
         const shortsMatch = u.pathname.match(/\/shorts\/([a-zA-Z0-9_-]+)/);
-        if (shortsMatch) {
-          vid = shortsMatch[1];
-        }
+        if (shortsMatch) vid = shortsMatch[1];
       }
     }
-  } catch (e) {}
-
-  // YouTube
-  if (vid) {
-    youtubeFrame.src =
-      `https://www.youtube.com/embed/${vid}?autoplay=1`;
-
+  } catch(e){}
+  
+  if (vid) { 
+    youtubeFrame.src = `https://www.youtube.com/embed/${vid}?autoplay=1`; 
     youtubeFrame.style.display = 'block';
-    videoModal.classList.add('visible');
+    videoModal.classList.add('visible'); 
     return;
   }
 
-  // MP4 / WebM / MOV / MKV
   if (url.match(/\.(mp4|webm|mov|mkv)(\?.*)?$/i)) {
     modalVideo.src = url;
     modalVideo.style.display = 'block';
@@ -118,45 +86,30 @@ export function openVideoModal(url) {
     return;
   }
 
-  // Discord画像など
-  if (
-    url.includes('cdn.discordapp.com') ||
-    url.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/i)
-  ) {
+  if (url.includes('cdn.discordapp.com') || url.match(/\.(jpeg|jpg|gif|png|webp)(\?.*)?$/i)) {
     modalImage.src = url;
     modalImage.style.display = 'block';
     videoModal.classList.add('visible');
     return;
   }
 
-  // その他のURLは別タブで開く
   window.open(url, '_blank');
 }
 
-export function closeVideoModal() {
+export function closeVideoModal() { 
   const videoModal = document.getElementById('video-modal');
-
-  videoModal.classList.remove('visible');
-
-  setTimeout(() => {
-    document.getElementById('youtube-frame').src = '';
-    document.getElementById('modal-image').src = '';
-
+  videoModal.classList.remove('visible'); 
+  setTimeout(() => { 
+    document.getElementById('youtube-frame').src = ""; 
+    document.getElementById('modal-image').src = "";
     const mv = document.getElementById('modal-video');
-    mv.pause();
-    mv.removeAttribute('src');
-    mv.load();
-  }, 300);
+    mv.pause(); mv.src = "";
+  }, 300); 
 }
 
 export function initVideoModalEvents() {
   const videoModal = document.getElementById('video-modal');
-
   videoModal.addEventListener('click', closeVideoModal);
-
-  videoModal.querySelector('.modal-content').addEventListener('click', (e) => {
-    e.stopPropagation();
-  });
-
+  videoModal.querySelector('.modal-content').addEventListener('click', (e) => e.stopPropagation());
   videoModal.querySelector('.close-modal-btn').addEventListener('click', closeVideoModal);
 }
