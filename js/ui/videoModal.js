@@ -1,3 +1,4 @@
+
 export const NO_VIDEO_ICON = 'img/favicon/novideo.webp';
 
 export function getVideoIcon(url) {
@@ -35,61 +36,13 @@ export function isModalVideoIcon(iconSrc, url) {
          isTwimgUrl(url);
 }
 
-// 診断表示を作成
-function createVideoStatus(modalContent) {
-  let status = document.getElementById('video-diagnostic');
-
-  if (!status) {
-    status = document.createElement('div');
-    status.id = 'video-diagnostic';
-
-    Object.assign(status.style, {
-      position: 'absolute',
-      top: '10px',
-      left: '10px',
-      right: '10px',
-      zIndex: '100',
-      padding: '10px',
-      background: 'rgba(0, 0, 0, 0.85)',
-      color: '#ffffff',
-      fontSize: '13px',
-      lineHeight: '1.6',
-      borderRadius: '6px',
-      pointerEvents: 'none',
-      whiteSpace: 'pre-wrap',
-      overflowWrap: 'anywhere'
-    });
-
-    modalContent.appendChild(status);
-  }
-
-  status.style.display = 'block';
-  return status;
-}
-
-function getVideoErrorMessage(error) {
-  if (!error) return 'エラー情報なし';
-
-  const messages = {
-    1: 'MEDIA_ERR_ABORTED：読み込みが中断されました',
-    2: 'MEDIA_ERR_NETWORK：ネットワークエラー',
-    3: 'MEDIA_ERR_DECODE：動画のデコードに失敗',
-    4: 'MEDIA_ERR_SRC_NOT_SUPPORTED：動画形式またはURLに問題があります'
-  };
-
-  return messages[error.code] || `不明なエラー（コード ${error.code}）`;
-}
-
 export function openVideoModal(url) {
   const youtubeFrame = document.getElementById('youtube-frame');
   const modalImage = document.getElementById('modal-image');
   const modalVideo = document.getElementById('modal-video');
   const videoModal = document.getElementById('video-modal');
-  const modalContent = videoModal.querySelector('.modal-content');
 
-  const oldStatus = document.getElementById('video-diagnostic');
-  if (oldStatus) oldStatus.style.display = 'none';
-
+  // 前回の動画・画像をリセット
   youtubeFrame.style.display = 'none';
   youtubeFrame.src = '';
 
@@ -99,7 +52,6 @@ export function openVideoModal(url) {
   modalVideo.pause();
   modalVideo.removeAttribute('src');
   modalVideo.style.display = 'none';
-  modalVideo.removeAttribute('autoplay');
 
   // Archive動画
   if (url.toLowerCase().includes('archive')) {
@@ -109,99 +61,20 @@ export function openVideoModal(url) {
     return;
   }
 
-  // X / Twitter直リンク
+  // X / Twitterの直リンク
   if (isTwimgUrl(url)) {
     const isImage =
       /\.(jpe?g|png|gif|webp)(\?|$)/i.test(url) ||
       /[?&]format=(jpe?g|png|gif|webp)/i.test(url);
 
     if (isImage) {
+      // Xの画像
       modalImage.src = url;
       modalImage.style.display = 'block';
     } else {
-      const status = createVideoStatus(modalContent);
-
-      // 自動再生を無効化
-      modalVideo.autoplay = false;
-      modalVideo.controls = true;
-      modalVideo.playsInline = true;
-      modalVideo.setAttribute('playsinline', '');
-      modalVideo.preload = 'metadata';
-
-      modalVideo.style.display = 'block';
-      modalVideo.style.width = '100%';
-      modalVideo.style.height = '100%';
-      modalVideo.style.objectFit = 'contain';
-
-      status.textContent =
-        '【動画診断】\n' +
-        'URL設定：完了\n' +
-        '読み込み：開始待ち\n' +
-        'エラー：なし';
-
-      modalVideo.addEventListener('loadstart', () => {
-        status.textContent =
-          '【動画診断】\n' +
-          'URL設定：完了\n' +
-          '読み込み：開始しました\n' +
-          'エラー：なし';
-      });
-
-      modalVideo.addEventListener('loadedmetadata', () => {
-        status.textContent =
-          '【動画診断】\n' +
-          '動画情報：取得成功\n' +
-          `動画サイズ：${modalVideo.videoWidth} × ${modalVideo.videoHeight}\n` +
-          `長さ：${modalVideo.duration} 秒\n` +
-          'エラー：なし';
-      });
-
-      modalVideo.addEventListener('loadeddata', () => {
-        status.textContent =
-          '【動画診断】\n' +
-          '動画データ：読み込み成功\n' +
-          `動画サイズ：${modalVideo.videoWidth} × ${modalVideo.videoHeight}\n` +
-          '再生操作を試してください。\n' +
-          'エラー：なし';
-      });
-
-      modalVideo.addEventListener('canplay', () => {
-        status.textContent =
-          '【動画診断】\n' +
-          '再生準備：完了\n' +
-          `動画サイズ：${modalVideo.videoWidth} × ${modalVideo.videoHeight}\n` +
-          '再生ボタンを押してください。';
-      });
-
-      modalVideo.addEventListener('playing', () => {
-        status.textContent =
-          '【動画診断】\n' +
-          '再生状態：再生中';
-      });
-
-      modalVideo.addEventListener('pause', () => {
-        if (!modalVideo.ended) {
-          status.textContent =
-            '【動画診断】\n' +
-            '再生状態：一時停止';
-        }
-      });
-
-      modalVideo.addEventListener('error', () => {
-        status.textContent =
-          '【動画診断：エラー】\n' +
-          getVideoErrorMessage(modalVideo.error) + '\n' +
-          `networkState：${modalVideo.networkState}\n` +
-          `readyState：${modalVideo.readyState}\n` +
-          `URL：${modalVideo.currentSrc || url}`;
-      });
-
-      videoModal.classList.add('visible');
-
-      // モーダルを表示してから読み込み
-      modalVideo.src = url;
-      modalVideo.load();
-      return;
+      // Xの動画はiframeで直接開く
+      youtubeFrame.src = url;
+      youtubeFrame.style.display = 'block';
     }
 
     videoModal.classList.add('visible');
@@ -221,14 +94,18 @@ export function openVideoModal(url) {
 
       if (!vid) {
         const shortsMatch = u.pathname.match(/\/shorts\/([a-zA-Z0-9_-]+)/);
-        if (shortsMatch) vid = shortsMatch[1];
+        if (shortsMatch) {
+          vid = shortsMatch[1];
+        }
       }
     }
   } catch (e) {}
 
   // YouTube
   if (vid) {
-    youtubeFrame.src = `https://www.youtube.com/embed/${vid}?autoplay=1`;
+    youtubeFrame.src =
+      `https://www.youtube.com/embed/${vid}?autoplay=1`;
+
     youtubeFrame.style.display = 'block';
     videoModal.classList.add('visible');
     return;
@@ -253,6 +130,7 @@ export function openVideoModal(url) {
     return;
   }
 
+  // その他のURLは別タブで開く
   window.open(url, '_blank');
 }
 
@@ -269,9 +147,6 @@ export function closeVideoModal() {
     mv.pause();
     mv.removeAttribute('src');
     mv.load();
-
-    const status = document.getElementById('video-diagnostic');
-    if (status) status.style.display = 'none';
   }, 300);
 }
 
